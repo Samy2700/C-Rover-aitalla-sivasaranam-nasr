@@ -11,4 +11,7 @@ CMakeFiles/untitled1.dir/main.c.obj: \
  C:/Program\ Files/JetBrains/CLion\ 2023.3.2/bin/mingw/x86_64-w64-mingw32/include/_mingw_off_t.h \
  C:/Program\ Files/JetBrains/CLion\ 2023.3.2/bin/mingw/x86_64-w64-mingw32/include/swprintf.inl \
  C:/Program\ Files/JetBrains/CLion\ 2023.3.2/bin/mingw/x86_64-w64-mingw32/include/sec_api/stdio_s.h \
- C:\Users\samya\MARC-master\MARC-master\map.h
+ C:\Users\samya\MARC-master\MARC-master\map.h \
+ C:\Users\samya\MARC-master\MARC-master\loc.h \
+ C:\Users\samya\MARC-master\MARC-master\moves.h \
+ C:\Users\samya\MARC-master\MARC-master\tree.h
