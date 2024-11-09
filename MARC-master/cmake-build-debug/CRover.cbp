@@ -2,7 +2,7 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6"/>
 	<Project>
-		<Option title="untitled1"/>
+		<Option title="CRover"/>
 		<Option makefile_is_custom="1"/>
 		<Option compiler="gcc"/>
 		<Option virtualFolders="CMake Files\;"/>
@@ -93,10 +93,22 @@
 		<Unit filename="C:/Users/samya/MARC-master/MARC-master/map.h">
 			<Option target="untitled1"/>
 		</Unit>
+		<Unit filename="C:/Users/samya/MARC-master/MARC-master/movement_phase.c">
+			<Option target="untitled1"/>
+		</Unit>
+		<Unit filename="C:/Users/samya/MARC-master/MARC-master/movement_phase.h">
+			<Option target="untitled1"/>
+		</Unit>
 		<Unit filename="C:/Users/samya/MARC-master/MARC-master/moves.c">
 			<Option target="untitled1"/>
 		</Unit>
 		<Unit filename="C:/Users/samya/MARC-master/MARC-master/moves.h">
+			<Option target="untitled1"/>
+		</Unit>
+		<Unit filename="C:/Users/samya/MARC-master/MARC-master/moves_selection.c">
+			<Option target="untitled1"/>
+		</Unit>
+		<Unit filename="C:/Users/samya/MARC-master/MARC-master/moves_selection.h">
 			<Option target="untitled1"/>
 		</Unit>
 		<Unit filename="C:/Users/samya/MARC-master/MARC-master/queue.c">
@@ -105,16 +117,16 @@
 		<Unit filename="C:/Users/samya/MARC-master/MARC-master/queue.h">
 			<Option target="untitled1"/>
 		</Unit>
+		<Unit filename="C:/Users/samya/MARC-master/MARC-master/selection_tree.c">
+			<Option target="untitled1"/>
+		</Unit>
+		<Unit filename="C:/Users/samya/MARC-master/MARC-master/selection_tree.h">
+			<Option target="untitled1"/>
+		</Unit>
 		<Unit filename="C:/Users/samya/MARC-master/MARC-master/stack.c">
 			<Option target="untitled1"/>
 		</Unit>
 		<Unit filename="C:/Users/samya/MARC-master/MARC-master/stack.h">
-			<Option target="untitled1"/>
-		</Unit>
-		<Unit filename="C:/Users/samya/MARC-master/MARC-master/tree.c">
-			<Option target="untitled1"/>
-		</Unit>
-		<Unit filename="C:/Users/samya/MARC-master/MARC-master/tree.h">
 			<Option target="untitled1"/>
 		</Unit>
 		<Unit filename="C:/Users/samya/MARC-master/MARC-master/CMakeLists.txt">

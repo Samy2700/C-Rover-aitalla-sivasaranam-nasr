@@ -11,6 +11,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/untitled1.dir/queue.c.obj.d"
   "CMakeFiles/untitled1.dir/stack.c.obj"
   "CMakeFiles/untitled1.dir/stack.c.obj.d"
+  "CMakeFiles/untitled1.dir/tree.c.obj"
+  "CMakeFiles/untitled1.dir/tree.c.obj.d"
   "libuntitled1.dll.a"
   "untitled1.exe"
   "untitled1.exe.manifest"

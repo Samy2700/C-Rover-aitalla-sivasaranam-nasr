@@ -14,6 +14,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "C:/Users/samya/MARC-master/MARC-master/moves.c" "CMakeFiles/untitled1.dir/moves.c.obj" "gcc" "CMakeFiles/untitled1.dir/moves.c.obj.d"
   "C:/Users/samya/MARC-master/MARC-master/queue.c" "CMakeFiles/untitled1.dir/queue.c.obj" "gcc" "CMakeFiles/untitled1.dir/queue.c.obj.d"
   "C:/Users/samya/MARC-master/MARC-master/stack.c" "CMakeFiles/untitled1.dir/stack.c.obj" "gcc" "CMakeFiles/untitled1.dir/stack.c.obj.d"
+  "C:/Users/samya/MARC-master/MARC-master/tree.c" "CMakeFiles/untitled1.dir/tree.c.obj" "gcc" "CMakeFiles/untitled1.dir/tree.c.obj.d"
   )
 
 # Targets to which this target links which contain Fortran sources.
