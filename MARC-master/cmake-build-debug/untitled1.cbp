@@ -8,114 +8,116 @@
 		<Option virtualFolders="CMake Files\;"/>
 		<Build>
 			<Target title="all">
-				<Option working_dir="/Users/ilies/CLionProjects/C-Rover-aitalla-sivasaranam-nasr/MARC-master/cmake-build-debug"/>
+				<Option working_dir="C:/Users/samya/MARC-master/MARC-master/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/Users/ilies/CLionProjects/C-Rover-aitalla-sivasaranam-nasr/MARC-master/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/ilies/CLionProjects/C-Rover-aitalla-sivasaranam-nasr/MARC-master/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/Users/ilies/CLionProjects/C-Rover-aitalla-sivasaranam-nasr/MARC-master/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/ilies/CLionProjects/C-Rover-aitalla-sivasaranam-nasr/MARC-master/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="C:/PROGRA~1/JETBRA~1/CLION2~1.2/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/samya/MARC-master/MARC-master/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="C:/PROGRA~1/JETBRA~1/CLION2~1.2/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/samya/MARC-master/MARC-master/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/PROGRA~1/JETBRA~1/CLION2~1.2/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/samya/MARC-master/MARC-master/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/PROGRA~1/JETBRA~1/CLION2~1.2/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/samya/MARC-master/MARC-master/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="untitled1">
-				<Option output="/Users/ilies/CLionProjects/C-Rover-aitalla-sivasaranam-nasr/MARC-master/cmake-build-debug/untitled1" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/Users/ilies/CLionProjects/C-Rover-aitalla-sivasaranam-nasr/MARC-master/cmake-build-debug"/>
+				<Option output="C:/Users/samya/MARC-master/MARC-master/cmake-build-debug/untitled1.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/samya/MARC-master/MARC-master/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include"/>
-					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
-					<Add directory="/System/Library/Frameworks"/>
-					<Add directory="/Library/Frameworks"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2023.3.2/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/include"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2023.3.2/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/../../../../include"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2023.3.2/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/include-fixed"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2023.3.2/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/../../../../x86_64-w64-mingw32/include"/>
+					<Add directory="/mingw/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/Users/ilies/CLionProjects/C-Rover-aitalla-sivasaranam-nasr/MARC-master/cmake-build-debug/Makefile&quot;  VERBOSE=1 untitled1"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/ilies/CLionProjects/C-Rover-aitalla-sivasaranam-nasr/MARC-master/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/Users/ilies/CLionProjects/C-Rover-aitalla-sivasaranam-nasr/MARC-master/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/ilies/CLionProjects/C-Rover-aitalla-sivasaranam-nasr/MARC-master/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="C:/PROGRA~1/JETBRA~1/CLION2~1.2/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/samya/MARC-master/MARC-master/cmake-build-debug/Makefile&quot;  VERBOSE=1 untitled1"/>
+					<CompileFile command="C:/PROGRA~1/JETBRA~1/CLION2~1.2/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/samya/MARC-master/MARC-master/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/PROGRA~1/JETBRA~1/CLION2~1.2/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/samya/MARC-master/MARC-master/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/PROGRA~1/JETBRA~1/CLION2~1.2/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/samya/MARC-master/MARC-master/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="untitled1/fast">
-				<Option output="/Users/ilies/CLionProjects/C-Rover-aitalla-sivasaranam-nasr/MARC-master/cmake-build-debug/untitled1" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/Users/ilies/CLionProjects/C-Rover-aitalla-sivasaranam-nasr/MARC-master/cmake-build-debug"/>
+				<Option output="C:/Users/samya/MARC-master/MARC-master/cmake-build-debug/untitled1.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/samya/MARC-master/MARC-master/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include"/>
-					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
-					<Add directory="/System/Library/Frameworks"/>
-					<Add directory="/Library/Frameworks"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2023.3.2/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/include"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2023.3.2/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/../../../../include"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2023.3.2/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/include-fixed"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2023.3.2/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/../../../../x86_64-w64-mingw32/include"/>
+					<Add directory="/mingw/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/Users/ilies/CLionProjects/C-Rover-aitalla-sivasaranam-nasr/MARC-master/cmake-build-debug/Makefile&quot;  VERBOSE=1 untitled1/fast"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/ilies/CLionProjects/C-Rover-aitalla-sivasaranam-nasr/MARC-master/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/Users/ilies/CLionProjects/C-Rover-aitalla-sivasaranam-nasr/MARC-master/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/ilies/CLionProjects/C-Rover-aitalla-sivasaranam-nasr/MARC-master/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="C:/PROGRA~1/JETBRA~1/CLION2~1.2/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/samya/MARC-master/MARC-master/cmake-build-debug/Makefile&quot;  VERBOSE=1 untitled1/fast"/>
+					<CompileFile command="C:/PROGRA~1/JETBRA~1/CLION2~1.2/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/samya/MARC-master/MARC-master/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/PROGRA~1/JETBRA~1/CLION2~1.2/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/samya/MARC-master/MARC-master/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/PROGRA~1/JETBRA~1/CLION2~1.2/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/samya/MARC-master/MARC-master/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="edit_cache">
-				<Option working_dir="/Users/ilies/CLionProjects/C-Rover-aitalla-sivasaranam-nasr/MARC-master/cmake-build-debug"/>
+				<Option working_dir="C:/Users/samya/MARC-master/MARC-master/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/Users/ilies/CLionProjects/C-Rover-aitalla-sivasaranam-nasr/MARC-master/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/ilies/CLionProjects/C-Rover-aitalla-sivasaranam-nasr/MARC-master/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/Users/ilies/CLionProjects/C-Rover-aitalla-sivasaranam-nasr/MARC-master/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/ilies/CLionProjects/C-Rover-aitalla-sivasaranam-nasr/MARC-master/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="C:/PROGRA~1/JETBRA~1/CLION2~1.2/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/samya/MARC-master/MARC-master/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="C:/PROGRA~1/JETBRA~1/CLION2~1.2/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/samya/MARC-master/MARC-master/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/PROGRA~1/JETBRA~1/CLION2~1.2/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/samya/MARC-master/MARC-master/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/PROGRA~1/JETBRA~1/CLION2~1.2/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/samya/MARC-master/MARC-master/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="rebuild_cache">
-				<Option working_dir="/Users/ilies/CLionProjects/C-Rover-aitalla-sivasaranam-nasr/MARC-master/cmake-build-debug"/>
+				<Option working_dir="C:/Users/samya/MARC-master/MARC-master/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/Users/ilies/CLionProjects/C-Rover-aitalla-sivasaranam-nasr/MARC-master/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/ilies/CLionProjects/C-Rover-aitalla-sivasaranam-nasr/MARC-master/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/Users/ilies/CLionProjects/C-Rover-aitalla-sivasaranam-nasr/MARC-master/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/ilies/CLionProjects/C-Rover-aitalla-sivasaranam-nasr/MARC-master/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="C:/PROGRA~1/JETBRA~1/CLION2~1.2/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/samya/MARC-master/MARC-master/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="C:/PROGRA~1/JETBRA~1/CLION2~1.2/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/samya/MARC-master/MARC-master/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/PROGRA~1/JETBRA~1/CLION2~1.2/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/samya/MARC-master/MARC-master/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/PROGRA~1/JETBRA~1/CLION2~1.2/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/samya/MARC-master/MARC-master/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/Users/ilies/CLionProjects/C-Rover-aitalla-sivasaranam-nasr/MARC-master/loc.c">
+		<Unit filename="C:/Users/samya/MARC-master/MARC-master/loc.c">
 			<Option target="untitled1"/>
 		</Unit>
-		<Unit filename="/Users/ilies/CLionProjects/C-Rover-aitalla-sivasaranam-nasr/MARC-master/loc.h">
+		<Unit filename="C:/Users/samya/MARC-master/MARC-master/loc.h">
 			<Option target="untitled1"/>
 		</Unit>
-		<Unit filename="/Users/ilies/CLionProjects/C-Rover-aitalla-sivasaranam-nasr/MARC-master/main.c">
+		<Unit filename="C:/Users/samya/MARC-master/MARC-master/main.c">
 			<Option target="untitled1"/>
 		</Unit>
-		<Unit filename="/Users/ilies/CLionProjects/C-Rover-aitalla-sivasaranam-nasr/MARC-master/map.c">
+		<Unit filename="C:/Users/samya/MARC-master/MARC-master/map.c">
 			<Option target="untitled1"/>
 		</Unit>
-		<Unit filename="/Users/ilies/CLionProjects/C-Rover-aitalla-sivasaranam-nasr/MARC-master/map.h">
+		<Unit filename="C:/Users/samya/MARC-master/MARC-master/map.h">
 			<Option target="untitled1"/>
 		</Unit>
-		<Unit filename="/Users/ilies/CLionProjects/C-Rover-aitalla-sivasaranam-nasr/MARC-master/moves.c">
+		<Unit filename="C:/Users/samya/MARC-master/MARC-master/moves.c">
 			<Option target="untitled1"/>
 		</Unit>
-		<Unit filename="/Users/ilies/CLionProjects/C-Rover-aitalla-sivasaranam-nasr/MARC-master/moves.h">
+		<Unit filename="C:/Users/samya/MARC-master/MARC-master/moves.h">
 			<Option target="untitled1"/>
 		</Unit>
-		<Unit filename="/Users/ilies/CLionProjects/C-Rover-aitalla-sivasaranam-nasr/MARC-master/queue.c">
+		<Unit filename="C:/Users/samya/MARC-master/MARC-master/queue.c">
 			<Option target="untitled1"/>
 		</Unit>
-		<Unit filename="/Users/ilies/CLionProjects/C-Rover-aitalla-sivasaranam-nasr/MARC-master/queue.h">
+		<Unit filename="C:/Users/samya/MARC-master/MARC-master/queue.h">
 			<Option target="untitled1"/>
 		</Unit>
-		<Unit filename="/Users/ilies/CLionProjects/C-Rover-aitalla-sivasaranam-nasr/MARC-master/stack.c">
+		<Unit filename="C:/Users/samya/MARC-master/MARC-master/stack.c">
 			<Option target="untitled1"/>
 		</Unit>
-		<Unit filename="/Users/ilies/CLionProjects/C-Rover-aitalla-sivasaranam-nasr/MARC-master/stack.h">
+		<Unit filename="C:/Users/samya/MARC-master/MARC-master/stack.h">
 			<Option target="untitled1"/>
 		</Unit>
-		<Unit filename="/Users/ilies/CLionProjects/C-Rover-aitalla-sivasaranam-nasr/MARC-master/tree.c">
+		<Unit filename="C:/Users/samya/MARC-master/MARC-master/tree.c">
 			<Option target="untitled1"/>
 		</Unit>
-		<Unit filename="/Users/ilies/CLionProjects/C-Rover-aitalla-sivasaranam-nasr/MARC-master/tree.h">
+		<Unit filename="C:/Users/samya/MARC-master/MARC-master/tree.h">
 			<Option target="untitled1"/>
 		</Unit>
-		<Unit filename="/Users/ilies/CLionProjects/C-Rover-aitalla-sivasaranam-nasr/MARC-master/CMakeLists.txt">
+		<Unit filename="C:/Users/samya/MARC-master/MARC-master/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
 	</Project>

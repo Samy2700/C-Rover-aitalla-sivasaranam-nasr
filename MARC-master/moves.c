@@ -53,16 +53,19 @@ t_localisation translate(t_localisation loc, t_move move) {
 }
 
 char *getMoveAsString(t_move move) {
-    return _moves[move];
+    if (move >= 0 && move < 7) {
+        return _moves[move];
+    }
+    return "Unknown";
 }
 
-t_localisation move(t_localisation loc, t_move move_cmd) {
+t_localisation performMove(t_localisation loc, t_move move_cmd) {
     t_localisation new_loc;
     new_loc.ori = rotate(loc.ori, move_cmd);
-    new_loc = translate(loc, move_cmd);
+    new_loc = translate(new_loc, move_cmd);
     return new_loc;
 }
 
 void updateLocalisation(t_localisation *p_loc, t_move m) {
-    *p_loc = move(*p_loc, m);
+    *p_loc = performMove(*p_loc, m);
 }

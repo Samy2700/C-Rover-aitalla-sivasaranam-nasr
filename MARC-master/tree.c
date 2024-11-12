@@ -23,20 +23,21 @@ void addChild(t_treeNode *parent, t_treeNode *child) {
 void buildTree(t_treeNode *node, int depth, int max_depth, t_move *available_moves, int num_moves, t_map map, int level, int node_id) {
     if (depth >= max_depth) return;
     for (int i = 0; i < num_moves; i++) {
-        t_localisation new_loc = move(node->loc, available_moves[i]);
+        t_localisation new_loc = performMove(node->loc, available_moves[i]);
         if (!isValidLocalisation(new_loc.pos, map.x_max, map.y_max)) continue;
         int move_cost = map.costs[new_loc.pos.y][new_loc.pos.x];
+        if (move_cost == COST_UNDEF) continue; // Ignorer les mouvements vers des zones inaccessibles
         t_treeNode *child = createTreeNode(new_loc, node->cost + move_cost, available_moves[i], node);
         addChild(node, child);
-        printf("Niveau %d - Nœud %d: Mouvement %s, Position (%d, %d), Orientation %d, Coût cumulé %d\n",
+        printf("Level %d - Node %d: Move %s, Position (%d, %d), Orientation %d, Cumulative Cost %d\n",
                level, node_id, getMoveAsString(available_moves[i]), new_loc.pos.x, new_loc.pos.y, new_loc.ori, child->cost);
-        buildTree(child, depth + 1, max_depth, available_moves, num_moves, map, level + 1, node_id * 10 + i);
+        buildTree(child, depth + 1, max_depth, available_moves, num_moves, map, level + 1, node_id * 10 + i + 1);
     }
 }
 
 t_treeNode* findMinCostLeaf(t_treeNode *node, t_treeNode *min_node) {
     if (node->num_children == 0) {
-        printf("Feuille atteinte : Coût cumulé %d\n", node->cost);
+        printf("Leaf reached: Cumulative Cost %d\n", node->cost);
         if (min_node == NULL || node->cost < min_node->cost) {
             return node;
         }

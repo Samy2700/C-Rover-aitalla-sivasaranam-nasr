@@ -16,7 +16,7 @@ typedef enum e_move {
 } t_move;
 
 char *getMoveAsString(t_move move);
-t_localisation move(t_localisation, t_move);
-void updateLocalisation(t_localisation *, t_move);
+t_localisation performMove(t_localisation loc, t_move move_cmd);
+void updateLocalisation(t_localisation *p_loc, t_move m);
 
 #endif // MOVES_H

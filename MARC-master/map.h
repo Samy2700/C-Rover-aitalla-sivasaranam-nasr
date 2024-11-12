@@ -2,7 +2,8 @@
 #define MAP_H
 
 #define COST_UNDEF 65535
-#include "loc.h"
+
+#include "loc.h" // Assurez-vous que loc.h est inclus pour utiliser t_position
 
 typedef enum e_soil {
     BASE_STATION,
@@ -21,8 +22,10 @@ typedef struct s_map {
     int     y_max;
 } t_map;
 
-t_map createMapFromFile(char *);
+// Déclarations des fonctions accessibles depuis d'autres fichiers
+t_map createMapFromFile(char *filename);
 t_map createTrainingMap();
-void displayMap(t_map, t_localisation);
+void displayMap(t_map map, t_localisation marc_loc);
+t_position getBaseStationPosition(t_map map); // Ajout de la déclaration
 
 #endif // MAP_H
