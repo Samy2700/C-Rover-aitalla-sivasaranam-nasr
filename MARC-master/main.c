@@ -21,7 +21,7 @@ int main() {
     } else if (choice == 2) {
         map = createTrainingMap(); // Chargement de la carte d'entraînement
     } else {
-        printf("Choix invalide. Chargement de example1.map par défaut.\n"); // Choix invalide
+        printf("Choix invalide. Chargement de example1.map par defaut.\n"); // Choix invalide
         map = createMapFromFile("..\\maps\\example1.map"); // Chargement par défaut de la carte example1.map
     }
 
