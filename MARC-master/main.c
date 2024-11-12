@@ -8,7 +8,7 @@
 int main() {
     int choice; // Variable pour stocker le choix de la carte
     // Affichage des options de carte à charger
-    printf("Choisissez la carte à charger:\n");
+    printf("Choisissez la carte a charger:\n");
     printf("1. example1.map\n");
     printf("2. training.map\n");
     printf("Entrez votre choix (1 ou 2): ");
