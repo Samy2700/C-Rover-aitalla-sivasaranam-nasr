@@ -3,6 +3,7 @@
 #include "tree.h"
 #include "stack.h"
 
+// Crée un nœud de l'arbre
 t_treeNode* createTreeNode(t_localisation loc, int cost, t_move move, t_treeNode *parent) {
     t_treeNode *node = (t_treeNode *)malloc(sizeof(t_treeNode));
     node->loc = loc;
@@ -14,30 +15,46 @@ t_treeNode* createTreeNode(t_localisation loc, int cost, t_move move, t_treeNode
     return node;
 }
 
+// Ajoute un enfant à un nœud parent
 void addChild(t_treeNode *parent, t_treeNode *child) {
     parent->num_children++;
     parent->children = (t_treeNode **)realloc(parent->children, parent->num_children * sizeof(t_treeNode *));
     parent->children[parent->num_children - 1] = child;
 }
 
-void buildTree(t_treeNode *node, int depth, int max_depth, t_move *available_moves, int num_moves, t_map map, int level, int node_id) {
+// Construit l'arbre des déplacements jusqu'à une profondeur donnée
+void buildTree(t_treeNode *node, int depth, int max_depth, t_move *available_moves, int num_moves, t_map map) {
     if (depth >= max_depth) return;
     for (int i = 0; i < num_moves; i++) {
-        t_localisation new_loc = performMove(node->loc, available_moves[i]);
+        t_move current_move = available_moves[i];
+        t_localisation new_loc = performMove(node->loc, current_move);
+
+        // Vérifie si la nouvelle localisation est valide
         if (!isValidLocalisation(new_loc.pos, map.x_max, map.y_max)) continue;
-        int move_cost = map.costs[new_loc.pos.y][new_loc.pos.x];
-        if (move_cost == COST_UNDEF) continue; // Ignorer les mouvements vers des zones inaccessibles
-        t_treeNode *child = createTreeNode(new_loc, node->cost + move_cost, available_moves[i], node);
+
+        // Vérifie si la cellule est accessible (évite les crevasses)
+        if (map.costs[new_loc.pos.y][new_loc.pos.x] == COST_UNDEF || map.costs[new_loc.pos.y][new_loc.pos.x] >= 10000) continue;
+
+        // Calcule le coût cumulé
+        int new_cost = node->cost + map.costs[new_loc.pos.y][new_loc.pos.x];
+
+        // Crée un nouvel enfant
+        t_treeNode *child = createTreeNode(new_loc, new_cost, current_move, node);
         addChild(node, child);
-        printf("Level %d - Node %d: Move %s, Position (%d, %d), Orientation %d, Cumulative Cost %d\n",
-               level, node_id, getMoveAsString(available_moves[i]), new_loc.pos.x, new_loc.pos.y, new_loc.ori, child->cost);
-        buildTree(child, depth + 1, max_depth, available_moves, num_moves, map, level + 1, node_id * 10 + i + 1);
+
+        // Affiche les détails du nœud
+        printf("Depth %d - Move %s to (%d, %d), Orientation %d, Cumulative Cost %d\n",
+               depth + 1, getMoveAsString(current_move), new_loc.pos.x, new_loc.pos.y, new_loc.ori, new_cost);
+
+        // Récursion pour construire l'arbre
+        buildTree(child, depth + 1, max_depth, available_moves, num_moves, map);
     }
 }
 
+// Trouve la feuille avec le coût minimal
 t_treeNode* findMinCostLeaf(t_treeNode *node, t_treeNode *min_node) {
     if (node->num_children == 0) {
-        printf("Leaf reached: Cumulative Cost %d\n", node->cost);
+        printf("Leaf reached: Cumulative Cost %d at position (%d, %d)\n", node->cost, node->loc.pos.x, node->loc.pos.y);
         if (min_node == NULL || node->cost < min_node->cost) {
             return node;
         }
@@ -49,6 +66,7 @@ t_treeNode* findMinCostLeaf(t_treeNode *node, t_treeNode *min_node) {
     return min_node;
 }
 
+// Reconstruit le chemin depuis la feuille jusqu'à la racine
 void getPathFromLeaf(t_treeNode *leaf, t_move *path, int *path_length) {
     t_stack stack = createStack(10);
     t_treeNode *current = leaf;
@@ -59,12 +77,12 @@ void getPathFromLeaf(t_treeNode *leaf, t_move *path, int *path_length) {
         (*path_length)++;
     }
     for (int i = 0; i < *path_length; i++) {
-        printf("Top of stack before popping: %s\n", getMoveAsString(top(stack)));
         path[i] = pop(&stack);
     }
     free(stack.values);
 }
 
+// Libère la mémoire allouée à l'arbre
 void freeTree(t_treeNode *root) {
     if (root == NULL) return;
     for (int i = 0; i < root->num_children; i++) {

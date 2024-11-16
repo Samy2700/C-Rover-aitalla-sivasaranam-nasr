@@ -1,24 +1,23 @@
 #include "moves.h"
+#include <string.h>
 
+// Fonction de rotation
 t_orientation rotate(t_orientation ori, t_move move) {
-    int rst;
     switch (move) {
         case T_LEFT:
-            rst = 3;
-            break;
+            return (ori + 3) % 4; // Rotation à gauche (-90 degrés)
         case T_RIGHT:
-            rst = 1;
-            break;
+            return (ori + 1) % 4; // Rotation à droite (+90 degrés)
         case U_TURN:
-            rst = 2;
-            break;
+            return (ori + 2) % 4; // Demi-tour (180 degrés)
+        case L_90:
+            return (ori + 1) % 4; // Rotation spécifique, par exemple +90 degrés
         default:
-            rst = 0;
-            break;
+            return ori; // Pas de rotation pour les mouvements de déplacement
     }
-    return (ori + rst) % 4;
 }
 
+// Fonction de traduction
 t_localisation translate(t_localisation loc, t_move move) {
     t_position res = loc.pos;
     switch (move) {
@@ -46,6 +45,20 @@ t_localisation translate(t_localisation loc, t_move move) {
             else if (loc.ori == SOUTH) res.y -= 1;
             else if (loc.ori == WEST) res.x += 1;
             break;
+        case B_20:
+            if (loc.ori == NORTH) res.y += 2;
+            else if (loc.ori == EAST) res.x -= 2;
+            else if (loc.ori == SOUTH) res.y -= 2;
+            else if (loc.ori == WEST) res.x += 2;
+            break;
+        case L_90:
+            // Exemple de translation spécifique pour le mouvement L_90
+            // Peut être adapté selon la signification du mouvement
+            if (loc.ori == NORTH) res.y -= 1; // Exemple
+            else if (loc.ori == EAST) res.x += 1;
+            else if (loc.ori == SOUTH) res.y += 1;
+            else if (loc.ori == WEST) res.x -= 1;
+            break;
         default:
             break;
     }
@@ -53,7 +66,7 @@ t_localisation translate(t_localisation loc, t_move move) {
 }
 
 char *getMoveAsString(t_move move) {
-    if (move >= 0 && move < 7) {
+    if (move >= 0 && move < 9) {
         return _moves[move];
     }
     return "Unknown";

@@ -7,7 +7,8 @@
 #include "tree.h"
 
 #define MAX_PHASES 10
-#define MAX_PATH_LENGTH 10
+#define MAX_DEPTH 5
+#define MAX_PATH_LENGTH 20
 
 int main() {
     srand(time(NULL));
@@ -15,7 +16,8 @@ int main() {
     printf("Choose the map to load:\n");
     printf("1. example1.map\n");
     printf("2. training.map\n");
-    printf("Enter your choice (1 or 2): ");
+    printf("3. custom1.map\n"); // Ajouter des options pour les cartes personnalisées
+    printf("Enter your choice (1, 2, or 3): ");
     scanf("%d", &choice);
 
     t_map map;
@@ -23,126 +25,133 @@ int main() {
         map = createMapFromFile("..\\maps\\example1.map");
     } else if (choice == 2) {
         map = createTrainingMap();
+    } else if (choice == 3) {
+        map = createMapFromFile("..\\maps\\custom1.map"); // Exemple de carte personnalisée
     } else {
         printf("Invalid choice. Loading example1.map by default.\n");
         map = createMapFromFile("..\\maps\\example1.map");
     }
 
     printf("Map created with dimensions %d x %d\n", map.y_max, map.x_max);
-    printf("Displaying soil types:\n");
-    for (int i = 0; i < map.y_max; i++) {
-        for (int j = 0; j < map.x_max; j++) {
-            printf("%d ", map.soils[i][j]);
-        }
-        printf("\n");
-    }
+    printf("Displaying soil types and costs:\n");
+    // Affichage des sols et des coûts sans rover
+    t_localisation dummy_loc = loc_init(-1, -1, NORTH); // Position hors carte pour ne pas afficher le rover
+    displayMap(map, dummy_loc);
 
-    printf("Displaying costs:\n");
-    for (int i = 0; i < map.y_max; i++) {
-        for (int j = 0; j < map.x_max; j++) {
-            printf("%-5d ", map.costs[i][j]);
-        }
-        printf("\n");
-    }
-
-    // Initialize MARC's location at the base station
-    t_position base_pos = getBaseStationPosition(map);
-    t_localisation marc_loc = loc_init(base_pos.x, base_pos.y, NORTH);
-    printf("MARC initial position: (%d, %d), orientation: %d\n", marc_loc.pos.x, marc_loc.pos.y, marc_loc.ori);
+    // Initialisation de la position du rover (différente de la base)
+    t_localisation marc_loc = loc_init(0, 0, NORTH);
+    printf("\nMARC initial position: (%d, %d), orientation: %d (NORTH=0, EAST=1, SOUTH=2, WEST=3)\n", marc_loc.pos.x, marc_loc.pos.y, marc_loc.ori);
     displayMap(map, marc_loc);
 
-    // Define all possible moves
-    t_move all_moves[] = {F_10, F_20, F_30, B_10, T_LEFT, T_RIGHT, U_TURN};
-    int total_moves = sizeof(all_moves) / sizeof(all_moves[0]);
-
-    int max_phases = MAX_PHASES;
     int current_phase = 0;
     int mission_completed = 0;
 
-    while (current_phase < max_phases && !mission_completed) {
+    while (current_phase < MAX_PHASES && !mission_completed) {
         printf("\n--- Phase %d ---\n", current_phase + 1);
 
-        // Randomly select 3 unique available moves for this phase
-        int num_available_moves = 3;
-        t_move available_moves[3];
+        // Sélection aléatoire de 5 mouvements parmi les 9 possibles
+        int num_available_moves = 5;
+        t_move available_moves[5];
         for (int i = 0; i < num_available_moves; i++) {
-            available_moves[i] = all_moves[rand() % total_moves];
-            // Ensure uniqueness
+            available_moves[i] = rand() % 9;
+            // Assurer l'unicité des mouvements
             for (int j = 0; j < i; j++) {
                 if (available_moves[j] == available_moves[i]) {
-                    available_moves[i] = all_moves[rand() % total_moves];
-                    j = -1; // Restart checking
+                    available_moves[i] = rand() % 9;
+                    j = -1; // Recommencer la vérification
                 }
             }
         }
+
         printf("Available moves for this phase:\n");
         for (int i = 0; i < num_available_moves; i++) {
-            printf("- %s\n", getMoveAsString(available_moves[i]));
+            printf("%d. %s\n", i + 1, getMoveAsString(available_moves[i]));
         }
 
-        // Build the movement tree
-        int max_depth = 3; // Depth of 3 for simplicity
+        // Mesure du temps de construction de l'arbre
+        clock_t start_build = clock();
         t_treeNode *root = createTreeNode(marc_loc, 0, -1, NULL);
-        buildTree(root, 0, max_depth, available_moves, num_available_moves, map, 0, 1);
+        buildTree(root, 0, MAX_DEPTH, available_moves, num_available_moves, map);
+        clock_t end_build = clock();
+        double time_build = ((double)(end_build - start_build)) / CLOCKS_PER_SEC;
 
-        // Find the leaf with the minimum cumulative cost
+        // Mesure du temps de recherche de la feuille minimale
+        clock_t start_search = clock();
         t_treeNode *min_leaf = findMinCostLeaf(root, NULL);
-        if (min_leaf != NULL) {
-            t_move path[MAX_PATH_LENGTH];
-            int path_length = 0;
-            getPathFromLeaf(min_leaf, path, &path_length);
-            printf("\nOptimal path found with a total cost of %d:\n", min_leaf->cost);
-            for (int i = 0; i < path_length; i++) {
-                printf("Step %d: Move %s\n", i + 1, getMoveAsString(path[i]));
+        clock_t end_search = clock();
+        double time_search = ((double)(end_search - start_search)) / CLOCKS_PER_SEC;
+
+        // Mesure du temps de reconstruction du chemin
+        clock_t start_path = clock();
+        t_move path[MAX_PATH_LENGTH];
+        int path_length = 0;
+        getPathFromLeaf(min_leaf, path, &path_length);
+        clock_t end_path = clock();
+        double time_path = ((double)(end_path - start_path)) / CLOCKS_PER_SEC;
+
+        printf("\n--- Performance Metrics ---\n");
+        printf("Tree Construction Time: %.6f seconds\n", time_build);
+        printf("Leaf Search Time: %.6f seconds\n", time_search);
+        printf("Path Calculation Time: %.6f seconds\n", time_path);
+        printf("---------------------------\n");
+
+        // Affichage du chemin optimal
+        printf("\nOptimal path found with a total cost of %d:\n", min_leaf->cost);
+        for (int i = 0; i < path_length; i++) {
+            printf("Step %d: Move %s\n", i + 1, getMoveAsString(path[i]));
+        }
+
+        // Application des mouvements du chemin optimal
+        for (int i = 0; i < path_length; i++) {
+            printf("\nBefore move %d:\n", i + 1);
+            displayMap(map, marc_loc);
+            printf("Move %d: %s\n", i + 1, getMoveAsString(path[i]));
+            updateLocalisation(&marc_loc, path[i]);
+
+            // Vérifier si MARC est sorti de la carte
+            if (!isValidLocalisation(marc_loc.pos, map.x_max, map.y_max)) {
+                printf("MARC has moved out of the map boundaries to position (%d, %d)\n", marc_loc.pos.x, marc_loc.pos.y);
+                printf("Mission failed.\n");
+                mission_completed = 1;
+                break;
             }
 
-            // Apply the movements
-            for (int i = 0; i < path_length; i++) {
-                printf("\nBefore move %d:\n", i + 1);
-                displayMap(map, marc_loc);
-                printf("Move %d: %s\n", i + 1, getMoveAsString(path[i]));
-                updateLocalisation(&marc_loc, path[i]);
+            // Affichage de la carte après le mouvement
+            printf("\nAfter move %d:\n", i + 1);
+            displayMap(map, marc_loc);
 
-                // Check if MARC is still within the map
-                if (!isValidLocalisation(marc_loc.pos, map.x_max, map.y_max)) {
-                    printf("MARC has moved out of the map boundaries to position (%d, %d)\n", marc_loc.pos.x, marc_loc.pos.y);
+            // Récupération du type de sol actuel
+            t_soil current_soil = map.soils[marc_loc.pos.y][marc_loc.pos.x];
+            printf("MARC is now on soil type %d\n", current_soil);
+
+            // Gestion des conditions de sol
+            switch (current_soil) {
+                case ERG:
+                    printf("Warning: Erg soil, next movement will be affected.\n");
+                    break;
+                case REG:
+                    printf("Warning: Reg soil, only 4 movements will be available in the next phase.\n");
+                    break;
+                case CREVASSE:
+                    printf("Danger: MARC has fallen into a crevasse! Mission failed.\n");
                     mission_completed = 1;
                     break;
-                }
-
-                printf("After move %d:\n", i + 1);
-                displayMap(map, marc_loc);
-                t_soil current_soil = map.soils[marc_loc.pos.y][marc_loc.pos.x];
-                printf("MARC is now on soil type %d\n", current_soil);
-
-                switch (current_soil) {
-                    case ERG:
-                        printf("Warning: Erg soil, next movement will be affected.\n");
-                        break;
-                    case REG:
-                        printf("Warning: Reg soil, only 4 movements will be available in the next phase.\n");
-                        break;
-                    case CREVASSE:
-                        printf("Danger: MARC has fallen into a crevasse! Mission failed.\n");
-                        mission_completed = 1;
-                        break;
-                    case BASE_STATION:
-                        printf("Congratulations: MARC has arrived at the base! Mission accomplished.\n");
-                        mission_completed = 1;
-                        break;
-                    default:
-                        break;
-                }
-
-                if (mission_completed) break;
-
-                int case_cost = map.costs[marc_loc.pos.y][marc_loc.pos.x];
-                printf("Current cell cost: %d\n", case_cost);
+                case BASE_STATION:
+                    printf("Congratulations: MARC has arrived at the base! Mission accomplished.\n");
+                    mission_completed = 1;
+                    break;
+                default:
+                    break;
             }
-        } else {
-            printf("No valid path found for this phase.\n");
+
+            // Affichage du coût de la cellule actuelle
+            int case_cost = map.costs[marc_loc.pos.y][marc_loc.pos.x];
+            printf("Current cell cost: %d\n", case_cost);
+
+            if (mission_completed) break;
         }
 
+        // Libération de la mémoire allouée à l'arbre
         freeTree(root);
         current_phase++;
     }
@@ -151,7 +160,7 @@ int main() {
         printf("\nMaximum number of phases reached without completing the mission.\n");
     }
 
-    // Free allocated memory for the map
+    // Libération de la mémoire allouée pour la carte
     for (int i = 0; i < map.y_max; i++) {
         free(map.soils[i]);
         free(map.costs[i]);
