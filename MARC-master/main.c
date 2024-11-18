@@ -22,6 +22,7 @@ int main() {
     scanf("%d", &choice);
 
     t_map map;
+#if defined(_WIN32) || defined(_WIN64)
     if (choice == 1) {
         map = createMapFromFile("..\\maps\\example1.map");
     } else if (choice == 2) {
@@ -34,22 +35,51 @@ int main() {
         printf("Invalid choice. Loading example1.map by default.\n");
         map = createMapFromFile("..\\maps\\example1.map");
     }
+#else
+    if (choice == 1) {
+        map = createMapFromFile("../maps/example1.map");
+    } else if (choice == 2) {
+        map = createTrainingMap();
+    } else if (choice == 3) {
+        map = createMapFromFile("../maps/custom1.map"); // Exemple de carte personnalisée
+    } else if (choice == 4) {
+        map = createMapFromFile("../maps/custom2.map"); // Exemple de carte personnalisée
+    } else {
+        printf("Invalid choice. Loading example1.map by default.\n");
+        map = createMapFromFile("../maps/example1.map");
+    }
+#endif
 
     printf("Map created with dimensions %d x %d\n", map.y_max, map.x_max);
     printf("Displaying soil types and costs:\n");
-    // Affichage des sols et des coûts sans rover
-    t_localisation dummy_loc = loc_init(-1, -1, NORTH); // Position hors carte pour ne pas afficher le rover
-    displayMap(map, dummy_loc);
 
-    // Initialisation de la position du rover (différente de la base)
-    // Trouvons une position de départ qui n'est pas la station de base
+    // Affichage des types de sols
+    for (int i = 0; i < map.y_max; i++) {
+        for (int j = 0; j < map.x_max; j++) {
+            printf("%d ", map.soils[i][j]);
+        }
+        printf("\n");
+    }
+
+    // Affichage des coûts, alignés à gauche sur 5 caractères
+    printf("\nDisplaying costs:\n");
+    for (int i = 0; i < map.y_max; i++) {
+        for (int j = 0; j < map.x_max; j++) {
+            printf("%-5d ", map.costs[i][j]);
+        }
+        printf("\n");
+    }
+
+    // Trouvons une position de départ qui n'est ni la station de base ni une crevasse
     t_position base_pos = getBaseStationPosition(map);
     t_localisation marc_loc;
     int start_found = 0;
+    int start_cost = 0;
     for (int i = 0; i < map.y_max && !start_found; i++) {
         for (int j = 0; j < map.x_max && !start_found; j++) {
             if (map.soils[i][j] != BASE_STATION && map.soils[i][j] != CREVASSE) {
                 marc_loc = loc_init(j, i, NORTH);
+                start_cost = map.costs[i][j]; // Coût de la cellule de départ
                 start_found = 1;
             }
         }
@@ -97,7 +127,7 @@ int main() {
 
         // Mesure du temps de construction de l'arbre
         clock_t start_build = clock();
-        t_treeNode *root = createTreeNode(marc_loc, 0, -1, NULL);
+        t_treeNode *root = createTreeNode(marc_loc, start_cost, -1, NULL);
         buildTree(root, 0, MAX_DEPTH, available_moves, num_available_moves, map);
         clock_t end_build = clock();
         double time_build = ((double)(end_build - start_build)) / CLOCKS_PER_SEC;
@@ -181,6 +211,9 @@ int main() {
         // Libération de la mémoire allouée à l'arbre
         freeTree(root);
         current_phase++;
+
+        // Mise à jour du coût de départ pour la prochaine phase
+        start_cost = map.costs[marc_loc.pos.y][marc_loc.pos.x];
     }
 
     if (!mission_completed) {
