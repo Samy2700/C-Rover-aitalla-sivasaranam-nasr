@@ -1,4 +1,4 @@
-"C:\Program Files\JetBrains\CLion 2023.3.2\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - MinGW Makefiles" -S C:\Users\samya\MARC-master\MARC-master -B C:\Users\samya\MARC-master\MARC-master\cmake-build-debug
+"C:\Users\sajin\CLion 2023.3.2\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - MinGW Makefiles" -S C:\Users\sajin\CLionProjects\C-Rover-aitalla-sivasaranam-nasr\MARC-master -B C:\Users\sajin\CLionProjects\C-Rover-aitalla-sivasaranam-nasr\MARC-master\cmake-build-debug
 CMake Deprecation Warning:
   Support for "Extra Generators" like
 
@@ -11,9 +11,9 @@ CMake Deprecation Warning:
 -- The C compiler identification is GNU 13.1.0
 -- Detecting C compiler ABI info
 -- Detecting C compiler ABI info - done
--- Check for working C compiler: C:/Program Files/JetBrains/CLion 2023.3.2/bin/mingw/bin/gcc.exe - skipped
+-- Check for working C compiler: C:/Users/sajin/CLion 2023.3.2/bin/mingw/bin/gcc.exe - skipped
 -- Detecting C compile features
 -- Detecting C compile features - done
--- Configuring done (1.7s)
+-- Configuring done (2.9s)
 -- Generating done (0.0s)
--- Build files have been written to: C:/Users/samya/MARC-master/MARC-master/cmake-build-debug
+-- Build files have been written to: C:/Users/sajin/CLionProjects/C-Rover-aitalla-sivasaranam-nasr/MARC-master/cmake-build-debug
