@@ -6,6 +6,10 @@
 // Crée un nœud de l'arbre
 t_treeNode* createTreeNode(t_localisation loc, int cost, t_move move, t_treeNode *parent) {
     t_treeNode *node = (t_treeNode *)malloc(sizeof(t_treeNode));
+    if (node == NULL) {
+        fprintf(stderr, "Error: Memory allocation failed for tree node\n");
+        exit(1);
+    }
     node->loc = loc;
     node->cost = cost;
     node->move = move;
@@ -19,6 +23,10 @@ t_treeNode* createTreeNode(t_localisation loc, int cost, t_move move, t_treeNode
 void addChild(t_treeNode *parent, t_treeNode *child) {
     parent->num_children++;
     parent->children = (t_treeNode **)realloc(parent->children, parent->num_children * sizeof(t_treeNode *));
+    if (parent->children == NULL) {
+        fprintf(stderr, "Error: Memory allocation failed while adding child to tree node\n");
+        exit(1);
+    }
     parent->children[parent->num_children - 1] = child;
 }
 

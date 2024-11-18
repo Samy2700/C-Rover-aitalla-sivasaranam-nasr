@@ -17,7 +17,8 @@ int main() {
     printf("1. example1.map\n");
     printf("2. training.map\n");
     printf("3. custom1.map\n"); // Ajouter des options pour les cartes personnalisées
-    printf("Enter your choice (1, 2, or 3): ");
+    printf("4. custom2.map\n");
+    printf("Enter your choice (1, 2, 3, or 4): ");
     scanf("%d", &choice);
 
     t_map map;
@@ -27,6 +28,8 @@ int main() {
         map = createTrainingMap();
     } else if (choice == 3) {
         map = createMapFromFile("..\\maps\\custom1.map"); // Exemple de carte personnalisée
+    } else if (choice == 4) {
+        map = createMapFromFile("..\\maps\\custom2.map"); // Exemple de carte personnalisée
     } else {
         printf("Invalid choice. Loading example1.map by default.\n");
         map = createMapFromFile("..\\maps\\example1.map");
@@ -39,7 +42,31 @@ int main() {
     displayMap(map, dummy_loc);
 
     // Initialisation de la position du rover (différente de la base)
-    t_localisation marc_loc = loc_init(0, 0, NORTH);
+    // Trouvons une position de départ qui n'est pas la station de base
+    t_position base_pos = getBaseStationPosition(map);
+    t_localisation marc_loc;
+    int start_found = 0;
+    for (int i = 0; i < map.y_max && !start_found; i++) {
+        for (int j = 0; j < map.x_max && !start_found; j++) {
+            if (map.soils[i][j] != BASE_STATION && map.soils[i][j] != CREVASSE) {
+                marc_loc = loc_init(j, i, NORTH);
+                start_found = 1;
+            }
+        }
+    }
+
+    if (!start_found) {
+        fprintf(stderr, "Error: No valid starting position found (no cell is non-base and non-crevasse)\n");
+        // Libération de la mémoire allouée pour la carte
+        for (int i = 0; i < map.y_max; i++) {
+            free(map.soils[i]);
+            free(map.costs[i]);
+        }
+        free(map.soils);
+        free(map.costs);
+        exit(1);
+    }
+
     printf("\nMARC initial position: (%d, %d), orientation: %d (NORTH=0, EAST=1, SOUTH=2, WEST=3)\n", marc_loc.pos.x, marc_loc.pos.y, marc_loc.ori);
     displayMap(map, marc_loc);
 

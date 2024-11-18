@@ -33,8 +33,7 @@ CMakeFiles/untitled1.dir/main.c.obj: C:/Users/samya/MARC-master/MARC-master/main
   C:/Program\ Files/JetBrains/CLion\ 2023.3.2/bin/mingw/x86_64-w64-mingw32/include/vadefs.h \
   C:/Users/samya/MARC-master/MARC-master/loc.h \
   C:/Users/samya/MARC-master/MARC-master/map.h \
-  C:/Users/samya/MARC-master/MARC-master/moves.h \
-  C:/Users/samya/MARC-master/MARC-master/tree.h
+  C:/Users/samya/MARC-master/MARC-master/moves.h
 
 CMakeFiles/untitled1.dir/map.c.obj: C:/Users/samya/MARC-master/MARC-master/map.c \
   C:/Program\ Files/JetBrains/CLion\ 2023.3.2/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/limits.h \
@@ -61,10 +60,18 @@ CMakeFiles/untitled1.dir/map.c.obj: C:/Users/samya/MARC-master/MARC-master/map.c
   C:/Program\ Files/JetBrains/CLion\ 2023.3.2/bin/mingw/x86_64-w64-mingw32/include/swprintf.inl \
   C:/Program\ Files/JetBrains/CLion\ 2023.3.2/bin/mingw/x86_64-w64-mingw32/include/vadefs.h \
   C:/Users/samya/MARC-master/MARC-master/loc.h \
-  C:/Users/samya/MARC-master/MARC-master/map.h \
-  C:/Users/samya/MARC-master/MARC-master/queue.h
+  C:/Users/samya/MARC-master/MARC-master/map.h
 
 CMakeFiles/untitled1.dir/moves.c.obj: C:/Users/samya/MARC-master/MARC-master/moves.c \
+  C:/Program\ Files/JetBrains/CLion\ 2023.3.2/bin/mingw/x86_64-w64-mingw32/include/_mingw.h \
+  C:/Program\ Files/JetBrains/CLion\ 2023.3.2/bin/mingw/x86_64-w64-mingw32/include/_mingw_mac.h \
+  C:/Program\ Files/JetBrains/CLion\ 2023.3.2/bin/mingw/x86_64-w64-mingw32/include/_mingw_secapi.h \
+  C:/Program\ Files/JetBrains/CLion\ 2023.3.2/bin/mingw/x86_64-w64-mingw32/include/corecrt.h \
+  C:/Program\ Files/JetBrains/CLion\ 2023.3.2/bin/mingw/x86_64-w64-mingw32/include/crtdefs.h \
+  C:/Program\ Files/JetBrains/CLion\ 2023.3.2/bin/mingw/x86_64-w64-mingw32/include/sdks/_mingw_ddk.h \
+  C:/Program\ Files/JetBrains/CLion\ 2023.3.2/bin/mingw/x86_64-w64-mingw32/include/sec_api/string_s.h \
+  C:/Program\ Files/JetBrains/CLion\ 2023.3.2/bin/mingw/x86_64-w64-mingw32/include/string.h \
+  C:/Program\ Files/JetBrains/CLion\ 2023.3.2/bin/mingw/x86_64-w64-mingw32/include/vadefs.h \
   C:/Users/samya/MARC-master/MARC-master/loc.h \
   C:/Users/samya/MARC-master/MARC-master/moves.h
 
@@ -204,8 +211,6 @@ C:/Users/samya/MARC-master/MARC-master/map.h:
 
 C:/Users/samya/MARC-master/MARC-master/moves.h:
 
-C:/Users/samya/MARC-master/MARC-master/tree.h:
-
 C:/Users/samya/MARC-master/MARC-master/map.c:
 
 C:/Users/samya/MARC-master/MARC-master/stack.h:
@@ -221,3 +226,5 @@ C:/Users/samya/MARC-master/MARC-master/moves.c:
 C:/Users/samya/MARC-master/MARC-master/queue.c:
 
 C:/Program\ Files/JetBrains/CLion\ 2023.3.2/bin/mingw/x86_64-w64-mingw32/include/assert.h:
+
+C:/Users/samya/MARC-master/MARC-master/tree.h:

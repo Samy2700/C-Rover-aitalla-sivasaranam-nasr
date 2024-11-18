@@ -52,12 +52,10 @@ t_localisation translate(t_localisation loc, t_move move) {
             else if (loc.ori == WEST) res.x += 2;
             break;
         case L_90:
-            // Exemple de translation spécifique pour le mouvement L_90
-            // Peut être adapté selon la signification du mouvement
-            if (loc.ori == NORTH) res.y -= 1; // Exemple
-            else if (loc.ori == EAST) res.x += 1;
-            else if (loc.ori == SOUTH) res.y += 1;
-            else if (loc.ori == WEST) res.x -= 1;
+            // Exemple de mouvement : Tourner à gauche de 90 degrés sans se déplacer
+            // Si le mouvement implique un déplacement, ajustez en conséquence
+            // Ici, nous n'effectuons pas de déplacement physique, seulement une rotation
+            // Donc, la position reste la même
             break;
         default:
             break;
