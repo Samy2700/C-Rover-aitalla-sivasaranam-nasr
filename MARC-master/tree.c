@@ -30,7 +30,6 @@ void addChild(t_treeNode *parent, t_treeNode *child) {
     parent->children[parent->num_children - 1] = child;
 }
 
-// Construit l'arbre des déplacements jusqu'à une profondeur donnée
 void buildTree(t_treeNode *node, int depth, int max_depth, t_move *available_moves, int num_moves, t_map map) {
     if (depth >= max_depth) return;
     for (int i = 0; i < num_moves; i++) {
@@ -41,10 +40,11 @@ void buildTree(t_treeNode *node, int depth, int max_depth, t_move *available_mov
         if (!isValidLocalisation(new_loc.pos, map.x_max, map.y_max)) continue;
 
         // Vérifie si la cellule est accessible (évite les crevasses)
-        if (map.costs[new_loc.pos.y][new_loc.pos.x] == COST_UNDEF || map.costs[new_loc.pos.y][new_loc.pos.x] >= 10000) continue;
+        if (map.soils[new_loc.pos.y][new_loc.pos.x] == CREVASSE) continue;
 
         // Calcule le coût cumulé
-        int new_cost = node->cost + map.costs[new_loc.pos.y][new_loc.pos.x];
+        int move_cost = _soil_cost[map.soils[new_loc.pos.y][new_loc.pos.x]];
+        int new_cost = node->cost + move_cost;
 
         // Crée un nouvel enfant
         t_treeNode *child = createTreeNode(new_loc, new_cost, current_move, node);

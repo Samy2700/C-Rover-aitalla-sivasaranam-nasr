@@ -1,7 +1,6 @@
 #include "moves.h"
 #include <string.h>
 
-// Fonction de rotation
 t_orientation rotate(t_orientation ori, t_move move) {
     switch (move) {
         case T_LEFT:
@@ -10,14 +9,12 @@ t_orientation rotate(t_orientation ori, t_move move) {
             return (ori + 1) % 4; // Rotation à droite (+90 degrés)
         case U_TURN:
             return (ori + 2) % 4; // Demi-tour (180 degrés)
-        case L_90:
-            return (ori + 1) % 4; // Rotation spécifique, par exemple +90 degrés
         default:
             return ori; // Pas de rotation pour les mouvements de déplacement
     }
 }
 
-// Fonction de traduction
+
 t_localisation translate(t_localisation loc, t_move move) {
     t_position res = loc.pos;
     switch (move) {
@@ -51,17 +48,13 @@ t_localisation translate(t_localisation loc, t_move move) {
             else if (loc.ori == SOUTH) res.y -= 2;
             else if (loc.ori == WEST) res.x += 2;
             break;
-        case L_90:
-            // Exemple de mouvement : Tourner à gauche de 90 degrés sans se déplacer
-            // Si le mouvement implique un déplacement, ajustez en conséquence
-            // Ici, nous n'effectuons pas de déplacement physique, seulement une rotation
-            // Donc, la position reste la même
-            break;
         default:
             break;
     }
-    return loc_init(res.x, res.y, loc.ori);
+    loc.pos = res;
+    return loc;
 }
+
 
 char *getMoveAsString(t_move move) {
     if (move >= 0 && move < 9) {
@@ -71,11 +64,19 @@ char *getMoveAsString(t_move move) {
 }
 
 t_localisation performMove(t_localisation loc, t_move move_cmd) {
-    t_localisation new_loc;
-    new_loc.ori = rotate(loc.ori, move_cmd);
-    new_loc = translate(new_loc, move_cmd);
-    return new_loc;
+    // Mettre à jour l'orientation si le mouvement est une rotation
+    if (move_cmd == T_LEFT || move_cmd == T_RIGHT || move_cmd == U_TURN) {
+        loc.ori = rotate(loc.ori, move_cmd);
+    }
+
+    // Mettre à jour la position si le mouvement est une translation
+    if (move_cmd == F_10 || move_cmd == F_20 || move_cmd == F_30 || move_cmd == B_10 || move_cmd == B_20) {
+        loc = translate(loc, move_cmd);
+    }
+
+    return loc;
 }
+
 
 void updateLocalisation(t_localisation *p_loc, t_move m) {
     *p_loc = performMove(*p_loc, m);
