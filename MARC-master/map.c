@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include "map.h"
 #include "loc.h"
 #include "queue.h"
@@ -158,56 +157,57 @@ t_map createTrainingMap() {
 }
 
 void displayMap(t_map map, t_localisation marc_loc) {
-    int min_x = marc_loc.pos.x - 2;
-    int max_x = marc_loc.pos.x + 2;
-    int min_y = marc_loc.pos.y - 2;
-    int max_y = marc_loc.pos.y + 2;
-
-    for (int i = min_y; i <= max_y; i++) {
-        for (int j = min_x; j <= max_x; j++) {
-            if (i < 0 || i >= map.y_max || j < 0 || j >= map.x_max) {
-                printf("   ");
-            } else if (i == marc_loc.pos.y && j == marc_loc.pos.x) {
-                switch (marc_loc.ori) {
-                    case NORTH:
-                        printf(" ↑ ");
-                        break;
-                    case EAST:
-                        printf(" → ");
-                        break;
-                    case SOUTH:
-                        printf(" ↓ ");
-                        break;
-                    case WEST:
-                        printf(" ← ");
-                        break;
-                    default:
-                        printf(" M ");
-                        break;
+    for (int i = 0; i < map.y_max; i++) {
+        for (int rep = 0; rep < 3; rep++) {
+            for (int j = 0; j < map.x_max; j++) {
+                char c[4];
+                if (i == marc_loc.pos.y && j == marc_loc.pos.x) {
+                    switch (marc_loc.ori) {
+                        case NORTH:
+                            strcpy(c, " ↑ ");
+                            break;
+                        case EAST:
+                            strcpy(c, " → ");
+                            break;
+                        case SOUTH:
+                            strcpy(c, " ↓ ");
+                            break;
+                        case WEST:
+                            strcpy(c, " ← ");
+                            break;
+                        default:
+                            strcpy(c, " M ");
+                            break;
+                    }
+                } else {
+                    switch (map.soils[i][j]) {
+                        case BASE_STATION:
+                            if (rep == 1) {
+                                strcpy(c, " B ");
+                            } else {
+                                strcpy(c, "   ");
+                            }
+                            break;
+                        case PLAIN:
+                            strcpy(c, "---");
+                            break;
+                        case ERG:
+                            strcpy(c, "~~~");
+                            break;
+                        case REG:
+                            strcpy(c, "^^^");
+                            break;
+                        case CREVASSE:
+                            strcpy(c, "XXX");
+                            break;
+                        default:
+                            strcpy(c, "???");
+                            break;
+                    }
                 }
-            } else {
-                switch (map.soils[i][j]) {
-                    case BASE_STATION:
-                        printf(" B ");
-                        break;
-                    case PLAIN:
-                        printf(" . ");
-                        break;
-                    case ERG:
-                        printf(" ~ ");
-                        break;
-                    case REG:
-                        printf(" ^ ");
-                        break;
-                    case CREVASSE:
-                        printf(" X ");
-                        break;
-                    default:
-                        printf(" ? ");
-                        break;
-                }
+                printf("%s", c);
             }
+            printf("\n");
         }
-        printf("\n");
     }
 }
