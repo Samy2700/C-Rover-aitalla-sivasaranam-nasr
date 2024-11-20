@@ -5,9 +5,7 @@
 #include "loc.h"
 #include "queue.h"
 
-t_position getBaseStationPosition(t_map map);
-void calculateCosts(t_map map);
-void removeFalseCrevasses(t_map map);
+
 
 t_position getBaseStationPosition(t_map map) {
     t_position pos;
