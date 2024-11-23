@@ -74,21 +74,7 @@ t_treeNode* findMinCostLeaf(t_treeNode *node, t_treeNode *min_node) {
     return min_node;
 }
 
-// Reconstruit le chemin depuis la feuille jusqu'à la racine
-void getPathFromLeaf(t_treeNode *leaf, t_move *path, int *path_length) {
-    t_stack stack = createStack(10);
-    t_treeNode *current = leaf;
-    *path_length = 0;
-    while (current->parent != NULL) {
-        push(&stack, current->move);
-        current = current->parent;
-        (*path_length)++;
-    }
-    for (int i = 0; i < *path_length; i++) {
-        path[i] = pop(&stack);
-    }
-    free(stack.values);
-}
+
 
 // Libère la mémoire allouée à l'arbre
 void freeTree(t_treeNode *root) {
@@ -98,4 +84,24 @@ void freeTree(t_treeNode *root) {
     }
     free(root->children);
     free(root);
+}
+
+void getPathFromLeaf(t_treeNode *leaf, t_move *path, int *path_length) {
+    t_stack stack = createStack(100);
+    t_treeNode *current = leaf;
+    *path_length = 0;
+    while (current->parent != NULL) {
+        push(&stack, current->move);
+        current = current->parent;
+        (path_length)++;
+    }
+
+    for (int i = 0; i < *path_length; i++) {
+        t_move move_at_top = top(stack);
+        path[i] = move_at_top;
+        printf("Move at position %d from top: %s\n", i + 1, getMoveAsString(move_at_top));
+        pop(&stack);
+    }
+
+    free(stack.values);
 }
