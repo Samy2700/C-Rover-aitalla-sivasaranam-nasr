@@ -10,10 +10,11 @@ typedef enum e_soil {
     PLAIN,
     ERG,
     REG,
-    CREVASSE
+    CREVASSE,
+    PENTE
 } t_soil;
 
-static const int _soil_cost[5] = {0, 1, 2, 4, 10000};
+static const int _soil_cost[6] = {0, 1, 2, 4, 10000, 3};
 
 typedef struct s_map {
     t_soil  **soils;

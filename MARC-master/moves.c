@@ -1,5 +1,6 @@
 #include "moves.h"
 #include <string.h>
+#include <stdio.h>
 
 t_orientation rotate(t_orientation ori, t_move move) {
     switch (move) {
@@ -72,6 +73,10 @@ t_localisation performMove(t_localisation loc, t_move move_cmd) {
     // Mettre à jour la position si le mouvement est une translation
     if (move_cmd == F_10 || move_cmd == F_20 || move_cmd == F_30 || move_cmd == B_10 || move_cmd == B_20) {
         loc = translate(loc, move_cmd);
+    }
+
+    if (move_cmd == L_90) {
+        printf("MARC is scanning the environment.\n");
     }
 
     return loc;

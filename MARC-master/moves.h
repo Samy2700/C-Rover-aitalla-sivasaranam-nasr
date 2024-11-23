@@ -21,7 +21,7 @@ typedef enum e_move {
     T_LEFT,
     T_RIGHT,
     U_TURN,
-    L_90 // Nouveau mouvement
+    L_90
 } t_move;
 
 // Récupère la description d'un mouvement

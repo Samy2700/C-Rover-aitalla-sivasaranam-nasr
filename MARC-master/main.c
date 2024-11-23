@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h> // Pour memcpy
 #include "map.h"
 #include "loc.h"
 #include "moves.h"
 #include "tree.h"
 
-#define MAX_PHASES 10
 #define MAX_DEPTH 5
 #define MAX_PATH_LENGTH 20
 
@@ -16,7 +16,7 @@ int main() {
     printf("Choose the map to load:\n");
     printf("1. example1.map\n");
     printf("2. training.map\n");
-    printf("3. custom1.map\n"); // Ajouter des options pour les cartes personnalisées
+    printf("3. custom1.map\n");
     printf("4. custom2.map\n");
     printf("Enter your choice (1, 2, 3, or 4): ");
     scanf("%d", &choice);
@@ -28,9 +28,9 @@ int main() {
     } else if (choice == 2) {
         map = createTrainingMap();
     } else if (choice == 3) {
-        map = createMapFromFile("..\\maps\\custom1.map"); // Exemple de carte personnalisée
+        map = createMapFromFile("..\\maps\\custom1.map");
     } else if (choice == 4) {
-        map = createMapFromFile("..\\maps\\custom2.map"); // Exemple de carte personnalisée
+        map = createMapFromFile("..\\maps\\custom2.map");
     } else {
         printf("Invalid choice. Loading example1.map by default.\n");
         map = createMapFromFile("..\\maps\\example1.map");
@@ -41,9 +41,9 @@ int main() {
     } else if (choice == 2) {
         map = createTrainingMap();
     } else if (choice == 3) {
-        map = createMapFromFile("../maps/custom1.map"); // Exemple de carte personnalisée
+        map = createMapFromFile("../maps/custom1.map");
     } else if (choice == 4) {
-        map = createMapFromFile("../maps/custom2.map"); // Exemple de carte personnalisée
+        map = createMapFromFile("../maps/custom2.map");
     } else {
         printf("Invalid choice. Loading example1.map by default.\n");
         map = createMapFromFile("../maps/example1.map");
@@ -51,9 +51,9 @@ int main() {
 #endif
 
     printf("Map created with dimensions %d x %d\n", map.y_max, map.x_max);
-    printf("Displaying soil types and costs:\n");
 
     // Affichage des types de sols
+    printf("Displaying soil types:\n");
     for (int i = 0; i < map.y_max; i++) {
         for (int j = 0; j < map.x_max; j++) {
             printf("%d ", map.soils[i][j]);
@@ -61,7 +61,7 @@ int main() {
         printf("\n");
     }
 
-    // Affichage des coûts, alignés à gauche sur 5 caractères
+    // Affichage des coûts
     printf("\nDisplaying costs:\n");
     for (int i = 0; i < map.y_max; i++) {
         for (int j = 0; j < map.x_max; j++) {
@@ -71,7 +71,6 @@ int main() {
     }
 
     // Trouvons une position de départ qui n'est ni la station de base ni une crevasse
-    t_position base_pos = getBaseStationPosition(map);
     t_localisation marc_loc;
     int start_found = 0;
     int start_cost = 0;
@@ -79,15 +78,15 @@ int main() {
         for (int j = 0; j < map.x_max && !start_found; j++) {
             if (map.soils[i][j] != BASE_STATION && map.soils[i][j] != CREVASSE) {
                 marc_loc = loc_init(j, i, NORTH);
-                start_cost = map.costs[i][j]; // Coût de la cellule de départ
+                start_cost = map.costs[i][j];
                 start_found = 1;
             }
         }
     }
 
     if (!start_found) {
-        fprintf(stderr, "Error: No valid starting position found (no cell is non-base and non-crevasse)\n");
-        // Libération de la mémoire allouée pour la carte
+        fprintf(stderr, "Error: No valid starting position found.\n");
+        // Libération de la mémoire
         for (int i = 0; i < map.y_max; i++) {
             free(map.soils[i]);
             free(map.costs[i]);
@@ -100,29 +99,38 @@ int main() {
     printf("\nMARC initial position: (%d, %d), orientation: %d (NORTH=0, EAST=1, SOUTH=2, WEST=3)\n", marc_loc.pos.x, marc_loc.pos.y, marc_loc.ori);
     displayMap(map, marc_loc);
 
-    int current_phase = 0;
     int mission_completed = 0;
+    int current_phase = 0;
+    int total_cost = 0;
 
-    while (current_phase < MAX_PHASES && !mission_completed) {
+    while (!mission_completed) {
         printf("\n--- Phase %d ---\n", current_phase + 1);
 
-        // Sélection aléatoire de 5 mouvements parmi les 9 possibles
-        int num_available_moves = 5;
-        t_move available_moves[5];
-        for (int i = 0; i < num_available_moves; i++) {
-            available_moves[i] = rand() % 9;
-            // Assurer l'unicité des mouvements
-            for (int j = 0; j < i; j++) {
-                if (available_moves[j] == available_moves[i]) {
-                    available_moves[i] = rand() % 9;
-                    j = -1; // Recommencer la vérification
-                }
-            }
+        // Demander à l'utilisateur de sélectionner les mouvements disponibles pour la phase suivante
+        int num_available_moves = 0;
+        printf("Enter the number of available moves for the next phase (up to 9): ");
+        scanf("%d", &num_available_moves);
+
+        if (num_available_moves < 1 || num_available_moves > 9) {
+            printf("Invalid number of moves. Defaulting to 5 moves.\n");
+            num_available_moves = 5;
         }
 
-        printf("Available moves for this phase:\n");
+        printf("Select %d moves from the list below by entering their numbers separated by spaces:\n", num_available_moves);
+        for (int i = 0; i < 9; i++) {
+            printf("%d. %s\n", i + 1, getMoveAsString(i));
+        }
+
+        int selected_moves_indices[9];
+        t_move available_moves[9];
         for (int i = 0; i < num_available_moves; i++) {
-            printf("%d. %s\n", i + 1, getMoveAsString(available_moves[i]));
+            scanf("%d", &selected_moves_indices[i]);
+            if (selected_moves_indices[i] < 1 || selected_moves_indices[i] > 9) {
+                printf("Invalid move number. Please enter a number between 1 and 9.\n");
+                i--; // Redemander ce mouvement
+            } else {
+                available_moves[i] = selected_moves_indices[i] - 1;
+            }
         }
 
         // Mesure du temps de construction de l'arbre
@@ -158,36 +166,41 @@ int main() {
             printf("Step %d: Move %s\n", i + 1, getMoveAsString(path[i]));
         }
 
-        // Application des mouvements du chemin optimal
-        for (int i = 0; i < path_length; i++) {
-            printf("\nBefore move %d:\n", i + 1);
-            displayMap(map, marc_loc);
-            printf("Move %d: %s\n", i + 1, getMoveAsString(path[i]));
-            updateLocalisation(&marc_loc, path[i]);
+        // Application du premier mouvement du chemin optimal
+        t_move selected_move = path[0];
 
-            // Vérifier si MARC est sorti de la carte
-            if (!isValidLocalisation(marc_loc.pos, map.x_max, map.y_max)) {
-                printf("MARC has moved out of the map boundaries to position (%d, %d)\n", marc_loc.pos.x, marc_loc.pos.y);
-                printf("Mission failed.\n");
-                mission_completed = 1;
-                break;
-            }
+        printf("\nExecuting move: %s\n", getMoveAsString(selected_move));
 
-            // Affichage de la carte après le mouvement
-            printf("\nAfter move %d:\n", i + 1);
-            displayMap(map, marc_loc);
+        // Mettre à jour la localisation de MARC
+        updateLocalisation(&marc_loc, selected_move);
 
-            // Récupération du type de sol actuel
+        // Vérifier si MARC est sorti de la carte
+        int out_of_bounds = 0;
+        if (!isValidLocalisation(marc_loc.pos, map.x_max, map.y_max)) {
+            printf("MARC has moved out of the map boundaries to position (%d, %d)\n", marc_loc.pos.x, marc_loc.pos.y);
+            out_of_bounds = 1;
+        }
+
+        // Afficher la carte mise à jour
+        displayMap(map, marc_loc);
+
+        if (!out_of_bounds) {
+            // Récupérer le type de sol actuel
             t_soil current_soil = map.soils[marc_loc.pos.y][marc_loc.pos.x];
+
+            // Afficher le type de sol
             printf("MARC is now on soil type %d\n", current_soil);
 
             // Gestion des conditions de sol
             switch (current_soil) {
                 case ERG:
-                    printf("Warning: Erg soil, next movement will be affected.\n");
+                    printf("Warning: Erg soil, next movement will cost double.\n");
                     break;
                 case REG:
-                    printf("Warning: Reg soil, only 4 movements will be available in the next phase.\n");
+                    printf("Warning: Reg soil, movement options are limited in the next phase.\n");
+                    break;
+                case PENTE:
+                    printf("Notice: Slope terrain, movement costs are increased.\n");
                     break;
                 case CREVASSE:
                     printf("Danger: MARC has fallen into a crevasse! Mission failed.\n");
@@ -204,20 +217,25 @@ int main() {
             // Affichage du coût de la cellule actuelle
             int case_cost = map.costs[marc_loc.pos.y][marc_loc.pos.x];
             printf("Current cell cost: %d\n", case_cost);
+            total_cost += case_cost;
 
-            if (mission_completed) break;
+            // Mise à jour du coût de départ pour la prochaine phase
+            start_cost = map.costs[marc_loc.pos.y][marc_loc.pos.x];
+
+            if (mission_completed) {
+                printf("Total cost of the mission: %d\n", total_cost);
+            }
+        } else {
+            printf("MARC is out of bounds.\n");
+            mission_completed = 1;
+            printf("Total cost before failure: %d\n", total_cost);
         }
 
         // Libération de la mémoire allouée à l'arbre
         freeTree(root);
+
+        // Incrémenter la phase
         current_phase++;
-
-        // Mise à jour du coût de départ pour la prochaine phase
-        start_cost = map.costs[marc_loc.pos.y][marc_loc.pos.x];
-    }
-
-    if (!mission_completed) {
-        printf("\nMaximum number of phases reached without completing the mission.\n");
     }
 
     // Libération de la mémoire allouée pour la carte

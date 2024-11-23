@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.27)
-project(untitled1 C)
+project(CRover C)
 
 set(CMAKE_C_STANDARD 11)
 
