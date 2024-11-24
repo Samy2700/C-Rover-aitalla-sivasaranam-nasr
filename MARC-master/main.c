@@ -7,107 +7,115 @@
 #include "moves.h"
 #include "tree.h"
 
-#define MAX_DEPTH 5
-#define MAX_PATH_LENGTH 20
-#define MAX_ENERGY 1000 // Énergie initiale du rover
+#define MAX_DEPTH 5           /**< Profondeur maximale de l'arbre de mouvements. */
+#define MAX_PATH_LENGTH 20    /**< Longueur maximale du chemin trouve. */
+#define MAX_ENERGY 100        /**< Energie initiale du rover. */
 
 int main() {
-    srand(time(NULL));
-    int choice;
-    printf("Choose the map to load:\n");
+    srand(time(NULL)); /**< Initialisation de la graine pour les fonctions aleatoires. */
+    int choix;
+
+    // Affichage des options de cartes disponibles
+    printf("Choisissez la carte a charger:\n");
     printf("1. example1.map\n");
     printf("2. training.map\n");
     printf("3. custom1.map\n");
     printf("4. custom2.map\n");
-    printf("Enter your choice (1, 2, 3, or 4): ");
-    scanf("%d", &choice);
+    printf("Entrez votre choix (1, 2, 3, ou 4): ");
+    scanf("%d", &choix);
 
-    t_map map;
+    t_map carte;
+
+    // Chargement de la carte choisie en fonction du systeme d'exploitation (Windows ou autre)
 #if defined(_WIN32) || defined(_WIN64)
-    if (choice == 1) {
-        map = createMapFromFile("..\\maps\\example1.map");
-    } else if (choice == 2) {
-        map = createTrainingMap();
-    } else if (choice == 3) {
-        map = createMapFromFile("..\\maps\\custom1.map");
-    } else if (choice == 4) {
-        map = createMapFromFile("..\\maps\\custom2.map");
+    if (choix == 1) {
+        carte = createMapFromFile("..\\maps\\example1.map");
+    } else if (choix == 2) {
+        carte = createTrainingMap();
+    } else if (choix == 3) {
+        carte = createMapFromFile("..\\maps\\custom1.map");
+    } else if (choix == 4) {
+        carte = createMapFromFile("..\\maps\\custom2.map");
     } else {
-        printf("Invalid choice. Loading example1.map by default.\n");
-        map = createMapFromFile("..\\maps\\example1.map");
+        printf("Choix invalide. Chargement de example1.map par defaut.\n");
+        carte = createMapFromFile("..\\maps\\example1.map");
     }
 #else
-    if (choice == 1) {
-        map = createMapFromFile("../maps/example1.map");
-    } else if (choice == 2) {
-        map = createTrainingMap();
-    } else if (choice == 3) {
-        map = createMapFromFile("../maps/custom1.map");
-    } else if (choice == 4) {
-        map = createMapFromFile("../maps/custom2.map");
+    if (choix == 1) {
+        carte = createMapFromFile("../maps/example1.map");
+    } else if (choix == 2) {
+        carte = createTrainingMap();
+    } else if (choix == 3) {
+        carte = createMapFromFile("../maps/custom1.map");
+    } else if (choix == 4) {
+        carte = createMapFromFile("../maps/custom2.map");
     } else {
-        printf("Invalid choice. Loading example1.map by default.\n");
-        map = createMapFromFile("../maps/example1.map");
+        printf("Choix invalide. Chargement de example1.map par defaut.\n");
+        carte = createMapFromFile("../maps/example1.map");
     }
 #endif
 
-    printf("Map created with dimensions %d x %d\n", map.y_max, map.x_max);
+    // Affichage des dimensions de la carte chargee
+    printf("Carte creee avec les dimensions %d x %d\n", carte.y_max, carte.x_max);
 
-    // Affichage des types de sols
-    printf("Displaying soil types:\n");
-    for (int i = 0; i < map.y_max; i++) {
-        for (int j = 0; j < map.x_max; j++) {
-            printf("%d ", map.soils[i][j]);
+    // Affichage des types de sols sur la carte
+    printf("Affichage des types de sols:\n");
+    for (int i = 0; i < carte.y_max; i++) {
+        for (int j = 0; j < carte.x_max; j++) {
+            printf("%d ", carte.soils[i][j]);
         }
         printf("\n");
     }
 
-    // Affichage des coûts
-    printf("\nDisplaying costs:\n");
-    for (int i = 0; i < map.y_max; i++) {
-        for (int j = 0; j < map.x_max; j++) {
-            printf("%-5d ", map.costs[i][j]);
+    // Affichage des couts des terrains sur la carte
+    printf("\nAffichage des couts:\n");
+    for (int i = 0; i < carte.y_max; i++) {
+        for (int j = 0; j < carte.x_max; j++) {
+            printf("%-5d ", carte.costs[i][j]);
         }
         printf("\n");
     }
 
     // Initialisation de la position du rover
-    t_localisation marc_loc;
-    int start_found = 0;
-    int start_cost = 0;
-    for (int i = 0; i < map.y_max && !start_found; i++) {
-        for (int j = 0; j < map.x_max && !start_found; j++) {
-            if (map.soils[i][j] != BASE_STATION && map.soils[i][j] != CREVASSE) {
-                marc_loc = loc_init(j, i, NORTH);
-                start_cost = map.costs[i][j];
-                start_found = 1;
+    t_localisation localisation_marc;
+    int depart_trouve = 0; /**< Indicateur pour savoir si une position de depart valide est trouvee. */
+    int cout_depart = 0;   /**< Cout initial. */
+    for (int i = 0; i < carte.y_max && !depart_trouve; i++) {
+        for (int j = 0; j < carte.x_max && !depart_trouve; j++) {
+            if (carte.soils[i][j] != BASE_STATION && carte.soils[i][j] != CREVASSE) {
+                localisation_marc = loc_init(j, i, NORTH); /**< Initialisation de la localisation du rover. */
+                cout_depart = carte.costs[i][j];         /**< Cout initial. */
+                depart_trouve = 1;                       /**< Position de depart trouvee. */
             }
         }
     }
 
-    if (!start_found) {
-        fprintf(stderr, "Error: No valid starting position found.\n");
-        // Libération de la mémoire
-        for (int i = 0; i < map.y_max; i++) {
-            free(map.soils[i]);
-            free(map.costs[i]);
+    // Verification si une position de depart valide a ete trouvee
+    if (!depart_trouve) {
+        fprintf(stderr, "Erreur: Aucune position de depart valide trouvee.\n");
+        // Liberation de la memoire allouee pour la carte
+        for (int i = 0; i < carte.y_max; i++) {
+            free(carte.soils[i]);
+            free(carte.costs[i]);
         }
-        free(map.soils);
-        free(map.costs);
-        exit(1);
+        free(carte.soils);
+        free(carte.costs);
+        exit(1); /**< Terminer le programme avec une erreur. */
     }
 
-    printf("\nMARC initial position: (%d, %d), orientation: %d (NORTH=0, EAST=1, SOUTH=2, WEST=3)\n", marc_loc.pos.x, marc_loc.pos.y, marc_loc.ori);
-    displayMap(map, marc_loc);
+    // Affichage de la position initiale du rover
+    printf("\nPosition initiale de MARC: (%d, %d), orientation: %d (NORTH=0, EAST=1, SOUTH=2, WEST=3)\n",
+           localisation_marc.pos.x, localisation_marc.pos.y, localisation_marc.ori);
+    displayMap(carte, localisation_marc); /**< Affichage de la carte avec la position du rover. */
 
-    int mission_completed = 0;
-    int current_phase = 0;
-    int total_cost = 0;
-    int energy = MAX_ENERGY; // Énergie initiale du rover
-    int erg_effect = 0;      // Effet du terrain ERG sur le prochain mouvement
+    int mission_completee = 0;    /**< Indicateur pour savoir si la mission est terminee. */
+    int phase_actuelle = 0;        /**< Compteur des phases. */
+    int cout_total = 0;            /**< Cout total cumule. */
+    int energie = MAX_ENERGY;      /**< Energie initiale du rover. */
+    int effet_erg = 0;             /**< Effet du terrain ERG sur le prochain mouvement. */
 
-    // Définition des coûts des mouvements
-    static const int _move_cost[9] = {
+    // Definition des couts des mouvements en energie
+    static const int _cout_mouvements[9] = {
             10, // F_10
             20, // F_20
             30, // F_30
@@ -119,177 +127,185 @@ int main() {
             15  // L_90
     };
 
-    while (!mission_completed) {
-        printf("\n--- Phase %d ---\n", current_phase + 1);
+    // Boucle principale de la mission
+    while (!mission_completee) {
+        printf("\n--- Phase %d ---\n", phase_actuelle + 1);
 
-        // Afficher l'énergie restante
-        printf("Energy remaining: %d\n", energy);
+        // Affichage de l'energie restante
+        printf("Energie restante: %d\n", energie);
 
-        // Demander à l'utilisateur de sélectionner les mouvements disponibles pour la phase suivante
-        int num_available_moves = 0;
-        printf("Enter the number of available moves for the next phase (up to 9): ");
-        scanf("%d", &num_available_moves);
+        // Demande a l'utilisateur de selectionner le nombre de mouvements disponibles pour la phase suivante
+        int nb_mouvements_disponibles = 0;
+        printf("Entrez le nombre de mouvements disponibles pour la prochaine phase (jusqu'a 9): ");
+        scanf("%d", &nb_mouvements_disponibles);
 
-        if (num_available_moves < 1 || num_available_moves > 9) {
-            printf("Invalid number of moves. Defaulting to 5 moves.\n");
-            num_available_moves = 5;
+        // Validation du nombre de mouvements selectionnes
+        if (nb_mouvements_disponibles < 1 || nb_mouvements_disponibles > 9) {
+            printf("Nombre de mouvements invalide. Defaut a 5 mouvements.\n");
+            nb_mouvements_disponibles = 5;
         }
 
-        printf("Select %d moves from the list below by entering their numbers separated by spaces:\n", num_available_moves);
+        // Affichage des mouvements disponibles pour la selection
+        printf("Selectionnez %d mouvements dans la liste ci-dessous en entrant leurs numeros separes par des espaces:\n", nb_mouvements_disponibles);
         for (int i = 0; i < 9; i++) {
             printf("%d. %s\n", i + 1, getMoveAsString(i));
         }
 
-        int selected_moves_indices[9];
-        t_move available_moves[9];
-        for (int i = 0; i < num_available_moves; i++) {
-            scanf("%d", &selected_moves_indices[i]);
-            if (selected_moves_indices[i] < 1 || selected_moves_indices[i] > 9) {
-                printf("Invalid move number. Please enter a number between 1 and 9.\n");
-                i--; // Redemander ce mouvement
+        int indices_mouvements_selectionnes[9]; /**< Indices des mouvements selectionnes. */
+        t_move mouvements_disponibles[9];      /**< Mouvements disponibles pour cette phase. */
+        for (int i = 0; i < nb_mouvements_disponibles; i++) {
+            scanf("%d", &indices_mouvements_selectionnes[i]); /**< Lecture des choix de l'utilisateur. */
+            if (indices_mouvements_selectionnes[i] < 1 || indices_mouvements_selectionnes[i] > 9) {
+                printf("Numero de mouvement invalide. Veuillez entrer un numero entre 1 et 9.\n");
+                i--; /**< Redemander ce mouvement. */
             } else {
-                available_moves[i] = selected_moves_indices[i] - 1;
+                mouvements_disponibles[i] = indices_mouvements_selectionnes[i] - 1; /**< Conversion en indice de l'enumeration. */
             }
         }
 
-        // Mesure du temps de construction de l'arbre
-        clock_t start_build = clock();
-        t_treeNode *root = createTreeNode(marc_loc, start_cost, -1, NULL);
-        buildTree(root, 0, MAX_DEPTH, available_moves, num_available_moves, map);
-        clock_t end_build = clock();
-        double time_build = ((double)(end_build - start_build)) / CLOCKS_PER_SEC;
+        // Mesure du temps de construction de l'arbre des mouvements
+        clock_t debut_construction = clock();
+        t_treeNode *racine = createTreeNode(localisation_marc, cout_depart, -1, NULL); /**< Creation de la racine de l'arbre. */
+        buildTree(racine, 0, MAX_DEPTH, mouvements_disponibles, nb_mouvements_disponibles, carte); /**< Construction de l'arbre. */
+        clock_t fin_construction = clock();
+        double temps_construction = ((double)(fin_construction - debut_construction)) / CLOCKS_PER_SEC; /**< Calcul du temps ecoule. */
 
-        // Mesure du temps de recherche de la feuille minimale
-        clock_t start_search = clock();
-        t_treeNode *min_leaf = findMinCostLeaf(root, NULL);
-        clock_t end_search = clock();
-        double time_search = ((double)(end_search - start_search)) / CLOCKS_PER_SEC;
+        // Mesure du temps de recherche de la feuille avec le cout minimal
+        clock_t debut_recherche = clock();
+        t_treeNode *feuille_min = findMinCostLeaf(racine, NULL); /**< Recherche de la feuille minimale. */
+        clock_t fin_recherche = clock();
+        double temps_recherche = ((double)(fin_recherche - debut_recherche)) / CLOCKS_PER_SEC;
 
-        // Mesure du temps de reconstruction du chemin
-        clock_t start_path = clock();
-        t_move path[MAX_PATH_LENGTH];
-        int path_length = 0;
-        getPathFromLeaf(min_leaf, path, &path_length);
-        clock_t end_path = clock();
-        double time_path = ((double)(end_path - start_path)) / CLOCKS_PER_SEC;
+        // Mesure du temps de reconstruction du chemin optimal
+        clock_t debut_chemin = clock();
+        t_move chemin[MAX_PATH_LENGTH]; /**< Tableau pour stocker le chemin. */
+        int longueur_chemin = 0;        /**< Longueur du chemin. */
+        getPathFromLeaf(feuille_min, chemin, &longueur_chemin); /**< Reconstruction du chemin. */
+        clock_t fin_chemin = clock();
+        double temps_chemin = ((double)(fin_chemin - debut_chemin)) / CLOCKS_PER_SEC;
 
+        // Affichage des metriques de performance
         printf("\n--- Performance Metrics ---\n");
-        printf("Tree Construction Time: %.6f seconds\n", time_build);
-        printf("Leaf Search Time: %.6f seconds\n", time_search);
-        printf("Path Calculation Time: %.6f seconds\n", time_path);
+        printf("Temps de construction de l'arbre: %.6f secondes\n", temps_construction);
+        printf("Temps de recherche de la feuille minimale: %.6f secondes\n", temps_recherche);
+        printf("Temps de calcul du chemin: %.6f secondes\n", temps_chemin);
         printf("---------------------------\n");
 
-        // Affichage du chemin optimal
-        printf("\nOptimal path found with a total cost of %d:\n", min_leaf->cost);
-        for (int i = 0; i < path_length; i++) {
-            printf("Step %d: Move %s\n", i + 1, getMoveAsString(path[i]));
+        // Affichage du chemin optimal trouve
+        printf("\nChemin optimal trouve avec un cout total de %d:\n", feuille_min->cost);
+        for (int i = 0; i < longueur_chemin; i++) {
+            printf("Etape %d: Mouvement %s\n", i + 1, getMoveAsString(chemin[i]));
         }
 
         // Application du premier mouvement du chemin optimal
-        t_move selected_move = path[0];
+        t_move mouvement_selectionne = chemin[0];
 
-        printf("\nExecuting move: %s\n", getMoveAsString(selected_move));
+        printf("\nExecution du mouvement: %s\n", getMoveAsString(mouvement_selectionne));
 
-        // Récupérer le coût du mouvement
-        int move_cost = _move_cost[selected_move];
+        // Recuperation du cout du mouvement selectionne
+        int cout_mouvement = _cout_mouvements[mouvement_selectionne];
 
-        // Appliquer l'effet du terrain ERG
-        if (erg_effect) {
-            move_cost *= 2;
-            erg_effect = 0; // Réinitialiser l'effet après l'avoir appliqué
+        // Application de l'effet du terrain ERG si actif
+        if (effet_erg) {
+            cout_mouvement *= 2; /**< Double le cout du mouvement. */
+            effet_erg = 0;       /**< Reinitialisation de l'effet. */
         }
 
-        // Mettre à jour la localisation de MARC
-        updateLocalisation(&marc_loc, selected_move);
+        // Mise a jour de la localisation du rover apres le mouvement
+        updateLocalisation(&localisation_marc, mouvement_selectionne);
 
-        // Vérifier si MARC est sorti de la carte
-        int out_of_bounds = 0;
-        if (!isValidLocalisation(marc_loc.pos, map.x_max, map.y_max)) {
-            printf("MARC has moved out of the map boundaries to position (%d, %d)\n", marc_loc.pos.x, marc_loc.pos.y);
-            out_of_bounds = 1;
+        // Verification si le rover est sorti des limites de la carte
+        int hors_limites = 0;
+        if (!isValidLocalisation(localisation_marc.pos, carte.x_max, carte.y_max)) {
+            printf("MARC a quitte les limites de la carte a la position (%d, %d)\n",
+                   localisation_marc.pos.x, localisation_marc.pos.y);
+            printf("Mission echouee: MARC a quitte la carte.\n");
+            mission_completee = 1; /**< Fin de la mission. */
+            printf("Energie totale utilisee avant l'echec: %d\n", MAX_ENERGY - energie);
+            freeTree(racine); /**< Liberation de la memoire de l'arbre. */
+            break; /**< Sortie de la boucle principale. */
         }
 
-        // Afficher la carte mise à jour
-        displayMap(map, marc_loc);
+        // Affichage de la carte mise a jour avec la nouvelle position du rover
+        displayMap(carte, localisation_marc);
 
-        if (!out_of_bounds) {
-            // Récupérer le type de sol actuel
-            t_soil current_soil = map.soils[marc_loc.pos.y][marc_loc.pos.x];
+        // Recuperation du type de sol actuel
+        t_soil sol_actuel = carte.soils[localisation_marc.pos.y][localisation_marc.pos.x];
 
-            // Afficher le type de sol
-            printf("MARC is now on soil type %d\n", current_soil);
+        // Affichage du type de sol sur lequel se trouve le rover
+        printf("MARC est maintenant sur le type de sol %d\n", sol_actuel);
 
-            // Gestion des conditions de sol
-            switch (current_soil) {
-                case ERG:
-                    printf("Warning: Erg soil, next movement will cost double.\n");
-                    erg_effect = 1;
-                    break;
-                case REG:
-                    printf("Warning: Reg soil, movement options are limited in the next phase.\n");
-                    // Limiter les mouvements disponibles (par exemple, seulement les rotations)
-                    // Vous pouvez implémenter cela si nécessaire
-                    break;
-                case PENTE:
-                    printf("Notice: Slope terrain, movement costs are increased.\n");
-                    move_cost += 5; // Augmenter le coût du mouvement
-                    break;
-                case CREVASSE:
-                    printf("Danger: MARC has fallen into a crevasse! Mission failed.\n");
-                    mission_completed = 1;
-                    break;
-                case BASE_STATION:
-                    printf("Congratulations: MARC has arrived at the base! Mission accomplished.\n");
-                    mission_completed = 1;
-                    break;
-                default:
-                    break;
-            }
-
-            // Affichage du coût du mouvement
-            printf("Movement cost: %d\n", move_cost);
-
-            // Décrémenter l'énergie
-            energy -= move_cost;
-
-            // Vérifier si l'énergie est épuisée
-            if (energy <= 0) {
-                printf("MARC has run out of energy! Mission failed.\n");
-                mission_completed = 1;
-            } else {
-                // Afficher l'énergie restante
-                printf("Energy remaining: %d\n", energy);
-            }
-
-            // Mise à jour du coût de départ pour la prochaine phase
-            start_cost = map.costs[marc_loc.pos.y][marc_loc.pos.x];
-
-            if (mission_completed) {
-                printf("Total energy used: %d\n", MAX_ENERGY - energy);
-            }
-        } else {
-            printf("MARC is out of bounds.\n");
-            mission_completed = 1;
-            printf("Total energy used before failure: %d\n", MAX_ENERGY - energy);
+        // Gestion des conditions specifiques des types de sol
+        switch (sol_actuel) {
+            case ERG:
+                printf("Avertissement: Sol ERG, le prochain mouvement coutera double.\n");
+                effet_erg = 1; /**< Activation de l'effet ERG pour le prochain mouvement. */
+                break;
+            case REG:
+                printf("Avertissement: Sol REG, options de mouvements limities dans la prochaine phase.\n");
+                // Limiter les mouvements disponibles (par exemple, seulement les rotations)
+                // Vous pouvez implementer cela si necessaire
+                break;
+            case PENTE:
+                printf("Notification: Sol en pente, les couts des mouvements sont augmentes.\n");
+                cout_mouvement += 5; /**< Augmentation du cout du mouvement. */
+                break;
+            case CREVASSE:
+                printf("Danger: MARC est tombe dans une crevasse! Mission echouee.\n");
+                mission_completee = 1; /**< Fin de la mission en echec. */
+                break;
+            case BASE_STATION:
+                printf("Felicitation: MARC est arrive a la base! Mission accomplie.\n");
+                mission_completee = 1; /**< Fin de la mission avec succes. */
+                break;
+            default:
+                break;
         }
 
-        // Libération de la mémoire allouée à l'arbre
-        freeTree(root);
+        // Verification si le rover est sur une crevasse ou a la station de base
+        if (sol_actuel == CREVASSE || sol_actuel == BASE_STATION) {
+            if (sol_actuel == CREVASSE) {
+                printf("Mission echouee: MARC est dans une crevasse.\n");
+            } else if (sol_actuel == BASE_STATION) {
+                printf("Mission reussie: MARC a atteint la base.\n");
+            }
+            printf("Energie totale utilisee: %d\n", MAX_ENERGY - energie);
+            freeTree(racine); /**< Liberation de la memoire de l'arbre. */
+            break; /**< Sortie de la boucle principale. */
+        }
 
-        // Vérifier si la mission est terminée
-        if (mission_completed) break;
+        // Decrementation de l'energie en fonction du cout du mouvement
+        energie -= cout_mouvement;
 
-        // Incrémenter la phase
-        current_phase++;
+        // Verification si l'energie est epuisee
+        if (energie <= 0) {
+            printf("MARC a epuis les energies! Mission echouee.\n");
+            mission_completee = 1; /**< Fin de la mission en echec. */
+            printf("Energie totale utilisee: %d\n", MAX_ENERGY - energie);
+            freeTree(racine); /**< Liberation de la memoire de l'arbre. */
+            break; /**< Sortie de la boucle principale. */
+        }
+
+        // Affichage de l'energie restante apres le mouvement
+        printf("Energie restante: %d\n", energie);
+
+        // Mise a jour du cout de depart pour la prochaine phase
+        cout_depart = carte.costs[localisation_marc.pos.y][localisation_marc.pos.x];
+
+        // Liberation de la memoire allouee a l'arbre
+        freeTree(racine);
+
+        // Incrementation de la phase
+        phase_actuelle++;
     }
 
-    // Libération de la mémoire allouée pour la carte
-    for (int i = 0; i < map.y_max; i++) {
-        free(map.soils[i]);
-        free(map.costs[i]);
+    // Liberation de la memoire allouee pour la carte avant de terminer le programme
+    for (int i = 0; i < carte.y_max; i++) {
+        free(carte.soils[i]);
+        free(carte.costs[i]);
     }
-    free(map.soils);
-    free(map.costs);
+    free(carte.soils);
+    free(carte.costs);
 
     return 0;
 }
