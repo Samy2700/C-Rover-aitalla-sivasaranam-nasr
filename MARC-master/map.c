@@ -20,9 +20,9 @@ t_position getBaseStationPosition(t_map map) {
         int j = 0;
         while (j < map.x_max && !trouve) {
             if (map.soils[i][j] == BASE_STATION) {
-                pos.x = j; /**< Assignation de la coordonnée x. */
-                pos.y = i; /**< Assignation de la coordonnée y. */
-                trouve = 1; /**< Indicateur de trouvaille. */
+                pos.x = j; // Assignation de la coordonnée x.
+                pos.y = i; // Assignation de la coordonnée y.
+                trouve = 1; // Indicateur de trouvaille.
             }
             j++;
         }
@@ -34,7 +34,7 @@ t_position getBaseStationPosition(t_map map) {
         fprintf(stderr, "Error: base station not found in the map\n");
         exit(1);
     }
-    return pos; /**< Retourne la position de la station de base. */
+    return pos;
 }
 
 /**
@@ -46,13 +46,14 @@ void removeFalseCrevasses(t_map map) {
     int imin, jmin;
 
     while (!termine) {
-        int min_cost = COST_UNDEF;
-        imin = map.y_max;
+        int min_cost = COST_UNDEF; // Initialisation du coût minimal.
+        imin = map.y_max;          // Initialisation des indices.
         jmin = map.x_max;
 
         // Recherche de la cellule non crevasse avec le coût minimal
         for (int i = 0; i < map.y_max; i++) {
             for (int j = 0; j < map.x_max; j++) {
+                // Vérifie si la cellule est accessible et si son coût est plus bas que le coût minimal actuel
                 if (map.soils[i][j] != CREVASSE && map.costs[i][j] > 10000 && map.costs[i][j] < min_cost) {
                     min_cost = map.costs[i][j];
                     imin = i;
@@ -67,12 +68,13 @@ void removeFalseCrevasses(t_map map) {
             pos.x = jmin;
             pos.y = imin;
 
-            t_position gauche = LEFT(pos); /**< Position à gauche. */
-            t_position droite = RIGHT(pos); /**< Position à droite. */
-            t_position haut = UP(pos);       /**< Position en haut. */
-            t_position bas = DOWN(pos);       /**< Position en bas. */
+            // Détermination des positions voisines
+            t_position gauche = LEFT(pos);
+            t_position droite = RIGHT(pos);
+            t_position haut = UP(pos);
+            t_position bas = DOWN(pos);
 
-            int min_voisin = COST_UNDEF;
+            int min_voisin = COST_UNDEF; // Initialisation du coût minimal des voisins
 
             // Trouver le coût minimal des voisins
             if (isValidLocalisation(gauche, map.x_max, map.y_max)) {
@@ -93,7 +95,7 @@ void removeFalseCrevasses(t_map map) {
             // Mise à jour du coût de la cellule avec le coût minimal de ses voisins plus son propre coût
             map.costs[imin][jmin] = (min_voisin + cout_self < map.costs[imin][jmin]) ? min_voisin + cout_self : map.costs[imin][jmin];
         } else {
-            termine = 1; /**< Terminer la boucle si aucune cellule supplémentaire à traiter. */
+            termine = 1; // Terminer la boucle si aucune cellule supplémentaire à traiter.
         }
     }
 }
@@ -103,22 +105,22 @@ void removeFalseCrevasses(t_map map) {
  * @param map La carte.
  */
 void calculateCosts(t_map map) {
-    t_position baseStation = getBaseStationPosition(map); /**< Récupération de la position de la station de base. */
-    t_queue file = createQueue(map.x_max * map.y_max);   /**< Création d'une file d'attente pour le BFS. */
-    enqueue(&file, baseStation);                         /**< Enqueue de la station de base dans la file. */
+    t_position baseStation = getBaseStationPosition(map); // Récupération de la position de la station de base.
+    t_queue file = createQueue(map.x_max * map.y_max);   // Création d'une file d'attente pour le BFS.
+    enqueue(&file, baseStation);                         // Enqueue de la station de base dans la file.
 
     // Parcours en largeur (BFS) pour calculer les coûts
     while (file.first != file.last) {
-        t_position pos = dequeue(&file); /**< Déqueue de la position actuelle. */
-        int cout_self = _soil_cost[map.soils[pos.y][pos.x]]; /**< Coût du sol actuel. */
+        t_position pos = dequeue(&file); // Déqueue de la position actuelle.
+        int cout_self = _soil_cost[map.soils[pos.y][pos.x]]; // Coût du sol actuel.
 
-        // Déplacement vers les quatre directions
+        // Détermination des positions voisines
         t_position gauche = LEFT(pos);
         t_position droite = RIGHT(pos);
         t_position haut = UP(pos);
         t_position bas = DOWN(pos);
 
-        int cout_min = COST_UNDEF;
+        int cout_min = COST_UNDEF; // Initialisation du coût minimal des voisins.
 
         // Trouver le coût minimal parmi les voisins
         if (isValidLocalisation(gauche, map.x_max, map.y_max)) {
@@ -139,20 +141,20 @@ void calculateCosts(t_map map) {
 
         // Enqueue des voisins si leur coût est indéfini
         if (isValidLocalisation(gauche, map.x_max, map.y_max) && map.costs[gauche.y][gauche.x] == COST_UNDEF) {
-            map.costs[gauche.y][gauche.x] = COST_UNDEF - 1; /**< Marque comme en cours de traitement. */
-            enqueue(&file, gauche);                     /**< Enqueue de la position à gauche. */
+            map.costs[gauche.y][gauche.x] = COST_UNDEF - 1; // Marque comme en cours de traitement.
+            enqueue(&file, gauche);                         // Enqueue de la position à gauche.
         }
         if (isValidLocalisation(droite, map.x_max, map.y_max) && map.costs[droite.y][droite.x] == COST_UNDEF) {
-            map.costs[droite.y][droite.x] = COST_UNDEF - 1; /**< Marque comme en cours de traitement. */
-            enqueue(&file, droite);                       /**< Enqueue de la position à droite. */
+            map.costs[droite.y][droite.x] = COST_UNDEF - 1; // Marque comme en cours de traitement.
+            enqueue(&file, droite);                           // Enqueue de la position à droite.
         }
         if (isValidLocalisation(haut, map.x_max, map.y_max) && map.costs[haut.y][haut.x] == COST_UNDEF) {
-            map.costs[haut.y][haut.x] = COST_UNDEF - 1; /**< Marque comme en cours de traitement. */
-            enqueue(&file, haut);                       /**< Enqueue de la position en haut. */
+            map.costs[haut.y][haut.x] = COST_UNDEF - 1; // Marque comme en cours de traitement.
+            enqueue(&file, haut);                       // Enqueue de la position en haut.
         }
         if (isValidLocalisation(bas, map.x_max, map.y_max) && map.costs[bas.y][bas.x] == COST_UNDEF) {
-            map.costs[bas.y][bas.x] = COST_UNDEF - 1; /**< Marque comme en cours de traitement. */
-            enqueue(&file, bas);                       /**< Enqueue de la position en bas. */
+            map.costs[bas.y][bas.x] = COST_UNDEF - 1; // Marque comme en cours de traitement.
+            enqueue(&file, bas);                       // Enqueue de la position en bas.
         }
     }
 }
@@ -165,10 +167,10 @@ void calculateCosts(t_map map) {
 t_map createMapFromFile(char *filename) {
     t_map carte;
     int xdim, ydim;
-    FILE *fichier = fopen(filename, "rt"); /**< Ouverture du fichier en mode texte. */
+    FILE *fichier = fopen(filename, "rt"); // Ouverture du fichier en mode texte.
     if (fichier == NULL) {
         fprintf(stderr, "Error: cannot open file %s\n", filename);
-        exit(1); /**< Terminer le programme si le fichier ne peut pas être ouvert. */
+        exit(1); // Terminer le programme si le fichier ne peut pas être ouvert.
     }
 
     // Lecture des dimensions de la carte depuis le fichier
@@ -194,16 +196,16 @@ t_map createMapFromFile(char *filename) {
         for (int j = 0; j < xdim; j++) {
             int valeur;
             fscanf(fichier, "%d", &valeur);
-            carte.soils[i][j] = valeur; /**< Assignation du type de sol. */
-            carte.costs[i][j] = (valeur == BASE_STATION) ? 0 : COST_UNDEF; /**< Initialisation du coût. */
+            carte.soils[i][j] = valeur; // Assignation du type de sol.
+            carte.costs[i][j] = (valeur == BASE_STATION) ? 0 : COST_UNDEF; // Initialisation du coût.
         }
     }
 
-    fclose(fichier); /**< Fermeture du fichier. */
+    fclose(fichier); // Fermeture du fichier.
 
-    calculateCosts(carte);        /**< Calcul des coûts des terrains. */
-    removeFalseCrevasses(carte);  /**< Suppression des fausses crevasses. */
-    return carte;                  /**< Retourne la carte créée. */
+    calculateCosts(carte);        // Calcul des coûts des terrains.
+    removeFalseCrevasses(carte);  // Suppression des fausses crevasses.
+    return carte;                  // Retourne la carte créée.
 }
 
 /**
@@ -211,7 +213,7 @@ t_map createMapFromFile(char *filename) {
  * @return La carte d'entraînement créée.
  */
 t_map createTrainingMap() {
-    return createMapFromFile("..\\maps\\training.map"); /**< Appel à createMapFromFile avec le fichier training.map. */
+    return createMapFromFile("..\\maps\\training.map"); // Appel à createMapFromFile avec le fichier training.map.
 }
 
 /**
@@ -225,35 +227,35 @@ void displayMap(t_map map, t_localisation marc_loc) {
             char c[4];
             // Vérification si la cellule courante correspond à la position du rover
             if (i == marc_loc.pos.y && j == marc_loc.pos.x) {
-                strcpy(c, " R "); /**< Représentation du rover. */
+                strcpy(c, " R "); // Représentation du rover.
             } else {
                 // Représentation du type de sol
                 switch (map.soils[i][j]) {
                     case BASE_STATION:
-                        strcpy(c, " B "); /**< Station de base. */
+                        strcpy(c, " B "); // Station de base.
                         break;
                     case PLAIN:
-                        strcpy(c, " - "); /**< Plaine. */
+                        strcpy(c, " - "); // Plaine.
                         break;
                     case ERG:
-                        strcpy(c, " ~ "); /**< Dunes de sable. */
+                        strcpy(c, " ~ "); // Dunes de sable.
                         break;
                     case REG:
-                        strcpy(c, " ^ "); /**< Terrain rocailleux. */
+                        strcpy(c, " ^ "); // Terrain rocailleux.
                         break;
                     case CREVASSE:
-                        strcpy(c, " X "); /**< Crevasse. */
+                        strcpy(c, " X "); // Crevasse.
                         break;
                     case PENTE:
-                        strcpy(c, " / "); /**< Terrain en pente. */
+                        strcpy(c, " / "); // Terrain en pente.
                         break;
                     default:
-                        strcpy(c, " ? "); /**< Type de sol inconnu. */
+                        strcpy(c, " ? "); // Type de sol inconnu.
                         break;
                 }
             }
-            printf("%s", c); /**< Affichage de la cellule. */
+            printf("%s", c); // Affichage de la cellule.
         }
-        printf("\n"); /**< Nouvelle ligne après chaque ligne de la carte. */
+        printf("\n"); // Nouvelle ligne après chaque ligne de la carte.
     }
 }

@@ -11,13 +11,13 @@
 t_orientation rotate(t_orientation ori, t_move move) {
     switch (move) {
         case T_LEFT:
-            return (ori + 3) % 4; /**< Rotation à gauche (-90 degrés). */
+            return (ori + 3) % 4; // Rotation à gauche (-90 degrés).
         case T_RIGHT:
-            return (ori + 1) % 4; /**< Rotation à droite (+90 degrés). */
+            return (ori + 1) % 4; // Rotation à droite (+90 degrés).
         case U_TURN:
-            return (ori + 2) % 4; /**< Demi-tour (180 degrés). */
+            return (ori + 2) % 4; // Demi-tour (180 degrés).
         default:
-            return ori; /**< Pas de rotation pour les mouvements de déplacement. */
+            return ori; // Pas de rotation pour les mouvements de déplacement.
     }
 }
 
@@ -28,43 +28,43 @@ t_orientation rotate(t_orientation ori, t_move move) {
  * @return La nouvelle localisation après translation.
  */
 t_localisation translate(t_localisation loc, t_move move) {
-    t_position res = loc.pos;
+    t_position res = loc.pos; // Copie de la position actuelle.
     switch (move) {
         case F_10:
-            if (loc.ori == NORTH) res.y -= 1; /**< Avancer vers le nord. */
-            else if (loc.ori == EAST) res.x += 1; /**< Avancer vers l'est. */
-            else if (loc.ori == SOUTH) res.y += 1; /**< Avancer vers le sud. */
-            else if (loc.ori == WEST) res.x -= 1; /**< Avancer vers l'ouest. */
+            if (loc.ori == NORTH) res.y -= 1; // Avancer vers le nord.
+            else if (loc.ori == EAST) res.x += 1; // Avancer vers l'est.
+            else if (loc.ori == SOUTH) res.y += 1; // Avancer vers le sud.
+            else if (loc.ori == WEST) res.x -= 1; // Avancer vers l'ouest.
             break;
         case F_20:
-            if (loc.ori == NORTH) res.y -= 2; /**< Avancer de 2 vers le nord. */
-            else if (loc.ori == EAST) res.x += 2; /**< Avancer de 2 vers l'est. */
-            else if (loc.ori == SOUTH) res.y += 2; /**< Avancer de 2 vers le sud. */
-            else if (loc.ori == WEST) res.x -= 2; /**< Avancer de 2 vers l'ouest. */
+            if (loc.ori == NORTH) res.y -= 2; // Avancer de 2 vers le nord.
+            else if (loc.ori == EAST) res.x += 2; // Avancer de 2 vers l'est.
+            else if (loc.ori == SOUTH) res.y += 2; // Avancer de 2 vers le sud.
+            else if (loc.ori == WEST) res.x -= 2; // Avancer de 2 vers l'ouest.
             break;
         case F_30:
-            if (loc.ori == NORTH) res.y -= 3; /**< Avancer de 3 vers le nord. */
-            else if (loc.ori == EAST) res.x += 3; /**< Avancer de 3 vers l'est. */
-            else if (loc.ori == SOUTH) res.y += 3; /**< Avancer de 3 vers le sud. */
-            else if (loc.ori == WEST) res.x -= 3; /**< Avancer de 3 vers l'ouest. */
+            if (loc.ori == NORTH) res.y -= 3; // Avancer de 3 vers le nord.
+            else if (loc.ori == EAST) res.x += 3; // Avancer de 3 vers l'est.
+            else if (loc.ori == SOUTH) res.y += 3; // Avancer de 3 vers le sud.
+            else if (loc.ori == WEST) res.x -= 3; // Avancer de 3 vers l'ouest.
             break;
         case B_10:
-            if (loc.ori == NORTH) res.y += 1; /**< Reculer vers le sud. */
-            else if (loc.ori == EAST) res.x -= 1; /**< Reculer vers l'ouest. */
-            else if (loc.ori == SOUTH) res.y -= 1; /**< Reculer vers le nord. */
-            else if (loc.ori == WEST) res.x += 1; /**< Reculer vers l'est. */
+            if (loc.ori == NORTH) res.y += 1; // Reculer vers le sud.
+            else if (loc.ori == EAST) res.x -= 1; // Reculer vers l'ouest.
+            else if (loc.ori == SOUTH) res.y -= 1; // Reculer vers le nord.
+            else if (loc.ori == WEST) res.x += 1; // Reculer vers l'est.
             break;
         case B_20:
-            if (loc.ori == NORTH) res.y += 2; /**< Reculer de 2 vers le sud. */
-            else if (loc.ori == EAST) res.x -= 2; /**< Reculer de 2 vers l'ouest. */
-            else if (loc.ori == SOUTH) res.y -= 2; /**< Reculer de 2 vers le nord. */
-            else if (loc.ori == WEST) res.x += 2; /**< Reculer de 2 vers l'est. */
+            if (loc.ori == NORTH) res.y += 2; // Reculer de 2 vers le sud.
+            else if (loc.ori == EAST) res.x -= 2; // Reculer de 2 vers l'ouest.
+            else if (loc.ori == SOUTH) res.y -= 2; // Reculer de 2 vers le nord.
+            else if (loc.ori == WEST) res.x += 2; // Reculer de 2 vers l'est.
             break;
         default:
-            break;
+            break; // Aucun déplacement pour les autres mouvements.
     }
-    loc.pos = res; /**< Mise à jour de la position. */
-    return loc;    /**< Retourne la nouvelle localisation après le mouvement. */
+    loc.pos = res; // Mise à jour de la position.
+    return loc;    // Retour de la nouvelle localisation.
 }
 
 /**
@@ -74,13 +74,13 @@ t_localisation translate(t_localisation loc, t_move move) {
  */
 char *getMoveAsString(t_move move) {
     if (move >= 0 && move < 9) {
-        return _moves[move]; /**< Retourne la chaîne correspondant au mouvement. */
+        return _moves[move]; // Retourne la chaîne correspondant au mouvement.
     }
-    return "Unknown"; /**< Retourne "Unknown" si le mouvement n'est pas valide. */
+    return "Unknown"; // Retourne "Unknown" si le mouvement n'est pas valide.
 }
 
 /**
- * @brief Effectue un mouvement et retourne la nouvelle localisation.
+ * @brief Effectue un mouvement et retourne la nouvelle localisation du rover.
  * @param loc La localisation actuelle du rover.
  * @param move_cmd Le mouvement à effectuer.
  * @return La nouvelle localisation après le mouvement.
@@ -102,7 +102,7 @@ t_localisation performMove(t_localisation loc, t_move move_cmd) {
         printf("MARC is scanning the environment.\n");
     }
 
-    return loc; /**< Retourne la nouvelle localisation après le mouvement. */
+    return loc; // Retourne la nouvelle localisation après le mouvement.
 }
 
 /**
@@ -111,5 +111,5 @@ t_localisation performMove(t_localisation loc, t_move move_cmd) {
  * @param m Le mouvement à effectuer.
  */
 void updateLocalisation(t_localisation *p_loc, t_move m) {
-    *p_loc = performMove(*p_loc, m); /**< Mise à jour de la localisation en appliquant le mouvement. */
+    *p_loc = performMove(*p_loc, m); // Mise à jour de la localisation en appliquant le mouvement.
 }

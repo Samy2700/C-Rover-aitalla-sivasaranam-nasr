@@ -16,17 +16,17 @@ t_treeNode* createTreeNode(t_localisation loc, int cost, t_move move, t_treeNode
     t_treeNode *node = (t_treeNode *)malloc(sizeof(t_treeNode));
     if (node == NULL) {
         fprintf(stderr, "Error: Memory allocation failed for tree node\n");
-        exit(1); /**< Terminer le programme en cas d'echec d'allocation. */
+        exit(1); // Terminer le programme en cas d'echec d'allocation.
     }
 
-    node->loc = loc;             /**< Assignation de la localisation. */
-    node->cost = cost;           /**< Assignation du cout cumule. */
-    node->move = move;           /**< Assignation du mouvement effectue. */
-    node->children = NULL;       /**< Initialisation du tableau des enfants a NULL. */
-    node->num_children = 0;      /**< Initialisation du nombre d'enfants a 0. */
-    node->parent = parent;       /**< Assignation du noeud parent. */
+    node->loc = loc;             // Assignation de la localisation.
+    node->cost = cost;           // Assignation du cout cumule.
+    node->move = move;           // Assignation du mouvement effectue.
+    node->children = NULL;       // Initialisation du tableau des enfants a NULL.
+    node->num_children = 0;      // Initialisation du nombre d'enfants a 0.
+    node->parent = parent;       // Assignation du noeud parent.
 
-    return node; /**< Retourne le noeud cree. */
+    return node; // Retourne le noeud cree.
 }
 
 /**
@@ -35,14 +35,14 @@ t_treeNode* createTreeNode(t_localisation loc, int cost, t_move move, t_treeNode
  * @param child Pointeur vers l'enfant a ajouter.
  */
 void addChild(t_treeNode *parent, t_treeNode *child) {
-    parent->num_children++; /**< Incrementation du nombre d'enfants du parent. */
+    parent->num_children++; // Incrementation du nombre d'enfants du parent.
     // Reallocation memoire pour ajouter un nouvel enfant
     parent->children = (t_treeNode **)realloc(parent->children, parent->num_children * sizeof(t_treeNode *));
     if (parent->children == NULL) {
         fprintf(stderr, "Error: Memory allocation failed while adding child to tree node\n");
-        exit(1); /**< Terminer le programme en cas d'echec d'allocation. */
+        exit(1); // Terminer le programme en cas d'echec d'allocation.
     }
-    parent->children[parent->num_children - 1] = child; /**< Ajout de l'enfant au tableau. */
+    parent->children[parent->num_children - 1] = child; // Ajout de l'enfant au tableau.
 }
 
 /**
@@ -55,25 +55,25 @@ void addChild(t_treeNode *parent, t_treeNode *child) {
  * @param map La carte.
  */
 void buildTree(t_treeNode *node, int depth, int max_depth, t_move *available_moves, int num_moves, t_map map) {
-    if (depth >= max_depth) return; /**< Si la profondeur maximale est atteinte, arreter la recursion. */
+    if (depth >= max_depth) return; // Si la profondeur maximale est atteinte, arreter la recursion.
 
-    for (int i = 0; i < num_moves; i++) { /**< Parcours des mouvements disponibles. */
+    for (int i = 0; i < num_moves; i++) { // Parcours des mouvements disponibles.
         t_move mouvement_courant = available_moves[i];
-        t_localisation nouvelle_loc = performMove(node->loc, mouvement_courant); /**< Obtention de la nouvelle localisation apres le mouvement. */
+        t_localisation nouvelle_loc = performMove(node->loc, mouvement_courant); // Obtention de la nouvelle localisation apres le mouvement.
 
-        // Verifie si la nouvelle localisation est valide (a l'interieur des limites de la carte)
+        // Vérifie si la nouvelle localisation est valide (à l'intérieur des limites de la carte)
         if (!isValidLocalisation(nouvelle_loc.pos, map.x_max, map.y_max)) continue;
 
-        // Verifie si la cellule est accessible (evite les crevasses)
+        // Vérifie si la cellule est accessible (évite les crevasses)
         if (map.soils[nouvelle_loc.pos.y][nouvelle_loc.pos.x] == CREVASSE) continue;
 
-        // Calcule le cout cumule en ajoutant le cout du sol actuel
+        // Calcule le coût cumulé en ajoutant le coût du sol actuel
         int cout_mouvement = _soil_cost[map.soils[nouvelle_loc.pos.y][nouvelle_loc.pos.x]];
         int nouveau_cout = node->cost + cout_mouvement;
 
-        // Cree un nouvel enfant avec la nouvelle localisation et le cout cumule
+        // Création d'un nouvel enfant avec la nouvelle localisation et le coût cumulé
         t_treeNode *enfant = createTreeNode(nouvelle_loc, nouveau_cout, mouvement_courant, node);
-        addChild(node, enfant); /**< Ajout de l'enfant au noeud parent. */
+        addChild(node, enfant); // Ajout de l'enfant au noeud parent.
 
         // Affichage des details du noeud pour le debogage ou l'information
         printf("Profondeur %d - Mouvement %s vers (%d, %d), Orientation %d, Cout cumule %d\n",
@@ -105,7 +105,7 @@ t_treeNode* findMinCostLeaf(t_treeNode *node, t_treeNode *min_node) {
     for (int i = 0; i < node->num_children; i++) {
         min_node = findMinCostLeaf(node->children[i], min_node);
     }
-    return min_node; /**< Retourne la feuille avec le cout minimal. */
+    return min_node; // Retourne la feuille avec le cout minimal.
 }
 
 /**
@@ -113,14 +113,14 @@ t_treeNode* findMinCostLeaf(t_treeNode *node, t_treeNode *min_node) {
  * @param root Pointeur vers la racine de l'arbre.
  */
 void freeTree(t_treeNode *root) {
-    if (root == NULL) return; /**< Si le noeud est NULL, rien a faire. */
+    if (root == NULL) return; // Si le noeud est NULL, rien a faire.
 
     // Libere recursivement les enfants
     for (int i = 0; i < root->num_children; i++) {
         freeTree(root->children[i]);
     }
-    free(root->children); /**< Libere le tableau des enfants. */
-    free(root);           /**< Libere le noeud lui-meme. */
+    free(root->children); // Libere le tableau des enfants.
+    free(root);           // Libere le noeud lui-meme.
 }
 
 /**
@@ -130,24 +130,24 @@ void freeTree(t_treeNode *root) {
  * @param path_length Pointeur vers la variable stockant la longueur du chemin.
  */
 void getPathFromLeaf(t_treeNode *leaf, t_move *path, int *path_length) {
-    t_stack pile = createStack(100); /**< Creation d'une pile pour stocker les mouvements. */
+    t_stack pile = createStack(100); // Creation d'une pile pour stocker les mouvements.
     t_treeNode *courant = leaf;
     *path_length = 0;
 
     // Remontee de l'arbre depuis la feuille jusqu'a la racine en empilant les mouvements
     while (courant->parent != NULL) {
-        push(&pile, courant->move); /**< Empile le mouvement effectue pour atteindre ce noeud. */
-        courant = courant->parent;    /**< Passe au noeud parent. */
-        (*path_length)++;            /**< Incremente la longueur du chemin. */
+        push(&pile, courant->move); // Empile le mouvement effectue pour atteindre ce noeud.
+        courant = courant->parent;    // Passe au noeud parent.
+        (*path_length)++;            // Incremente la longueur du chemin.
     }
 
     // Depile les mouvements pour reconstruire le chemin dans l'ordre de la racine vers la feuille
     for (int i = 0; i < *path_length; i++) {
-        t_move mouvement_en_pile = top(pile);          /**< Consulte le mouvement au sommet de la pile sans le retirer. */
-        path[i] = mouvement_en_pile;                    /**< Stocke le mouvement dans le tableau de chemin. */
-        printf("Mouvement a la position %d depuis le sommet: %s\n", i + 1, getMoveAsString(mouvement_en_pile)); /**< Affiche le mouvement. */
-        pop(&pile);                                      /**< Retire le mouvement de la pile. */
+        t_move mouvement_en_pile = top(pile);          // Consulte le mouvement au sommet de la pile sans le retirer.
+        path[i] = mouvement_en_pile;                    // Stocke le mouvement dans le tableau de chemin.
+        printf("Mouvement a la position %d depuis le sommet: %s\n", i + 1, getMoveAsString(mouvement_en_pile)); // Affiche le mouvement.
+        pop(&pile);                                      // Retire le mouvement de la pile.
     }
 
-    free(pile.values); /**< Libere la memoire allouee a la pile. */
+    free(pile.values); // Libere la memoire allouee a la pile.
 }

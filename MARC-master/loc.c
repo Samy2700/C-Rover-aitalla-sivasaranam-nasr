@@ -9,10 +9,10 @@
  */
 t_localisation loc_init(int x, int y, t_orientation ori) {
     t_localisation localisation;
-    localisation.pos.x = x;    /**< Assignation de la coordonnée x. */
-    localisation.pos.y = y;    /**< Assignation de la coordonnée y. */
-    localisation.ori = ori;    /**< Assignation de l'orientation. */
-    return localisation;       /**< Retourne la localisation initialisée. */
+    localisation.pos.x = x;     // Définition de la coordonnée x.
+    localisation.pos.y = y;     // Définition de la coordonnée y.
+    localisation.ori = ori;     // Définition de l'orientation.
+    return localisation;        // Retour de la localisation initialisée.
 }
 
 /**
@@ -23,6 +23,7 @@ t_localisation loc_init(int x, int y, t_orientation ori) {
  * @return 1 si la position est valide, 0 sinon.
  */
 int isValidLocalisation(t_position loc, int x_max, int y_max) {
+    // Vérifie que les coordonnées sont dans les limites.
     return (loc.x >= 0 && loc.x < x_max && loc.y >= 0 && loc.y < y_max);
 }
 
@@ -33,9 +34,9 @@ int isValidLocalisation(t_position loc, int x_max, int y_max) {
  */
 t_position LEFT(t_position pos) {
     t_position nouvelle_position;
-    nouvelle_position.x = pos.x - 1; /**< Décrémentation de la coordonnée x. */
-    nouvelle_position.y = pos.y;     /**< La coordonnée y reste inchangée. */
-    return nouvelle_position;        /**< Retourne la nouvelle position. */
+    nouvelle_position.x = pos.x - 1; // Déplacement vers la gauche.
+    nouvelle_position.y = pos.y;     // Coordonnée y reste inchangée.
+    return nouvelle_position;        // Retour de la nouvelle position.
 }
 
 /**
@@ -45,9 +46,9 @@ t_position LEFT(t_position pos) {
  */
 t_position RIGHT(t_position pos) {
     t_position nouvelle_position;
-    nouvelle_position.x = pos.x + 1; /**< Incrémentation de la coordonnée x. */
-    nouvelle_position.y = pos.y;     /**< La coordonnée y reste inchangée. */
-    return nouvelle_position;        /**< Retourne la nouvelle position. */
+    nouvelle_position.x = pos.x + 1; // Déplacement vers la droite.
+    nouvelle_position.y = pos.y;     // Coordonnée y reste inchangée.
+    return nouvelle_position;        // Retour de la nouvelle position.
 }
 
 /**
@@ -57,9 +58,9 @@ t_position RIGHT(t_position pos) {
  */
 t_position UP(t_position pos) {
     t_position nouvelle_position;
-    nouvelle_position.x = pos.x;     /**< La coordonnée x reste inchangée. */
-    nouvelle_position.y = pos.y - 1; /**< Décrémentation de la coordonnée y. */
-    return nouvelle_position;        /**< Retourne la nouvelle position. */
+    nouvelle_position.x = pos.x;     // Coordonnée x reste inchangée.
+    nouvelle_position.y = pos.y - 1; // Déplacement vers le haut.
+    return nouvelle_position;        // Retour de la nouvelle position.
 }
 
 /**
@@ -69,7 +70,7 @@ t_position UP(t_position pos) {
  */
 t_position DOWN(t_position pos) {
     t_position nouvelle_position;
-    nouvelle_position.x = pos.x;     /**< La coordonnée x reste inchangée. */
-    nouvelle_position.y = pos.y + 1; /**< Incrémentation de la coordonnée y. */
-    return nouvelle_position;        /**< Retourne la nouvelle position. */
+    nouvelle_position.x = pos.x;     // Coordonnée x reste inchangée.
+    nouvelle_position.y = pos.y + 1; // Déplacement vers le bas.
+    return nouvelle_position;        // Retour de la nouvelle position.
 }
