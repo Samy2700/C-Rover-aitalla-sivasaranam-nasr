@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <string.h> // Pour memcpy
+#include <string.h>
 #include "map.h"
 #include "loc.h"
 #include "moves.h"
@@ -9,6 +9,7 @@
 
 #define MAX_DEPTH 5
 #define MAX_PATH_LENGTH 20
+#define MAX_ENERGY 1000 // Énergie initiale du rover
 
 int main() {
     srand(time(NULL));
@@ -70,7 +71,7 @@ int main() {
         printf("\n");
     }
 
-    // Trouvons une position de départ qui n'est ni la station de base ni une crevasse
+    // Initialisation de la position du rover
     t_localisation marc_loc;
     int start_found = 0;
     int start_cost = 0;
@@ -102,9 +103,27 @@ int main() {
     int mission_completed = 0;
     int current_phase = 0;
     int total_cost = 0;
+    int energy = MAX_ENERGY; // Énergie initiale du rover
+    int erg_effect = 0;      // Effet du terrain ERG sur le prochain mouvement
+
+    // Définition des coûts des mouvements
+    static const int _move_cost[9] = {
+            10, // F_10
+            20, // F_20
+            30, // F_30
+            10, // B_10
+            20, // B_20
+            5,  // T_LEFT
+            5,  // T_RIGHT
+            10, // U_TURN
+            15  // L_90
+    };
 
     while (!mission_completed) {
         printf("\n--- Phase %d ---\n", current_phase + 1);
+
+        // Afficher l'énergie restante
+        printf("Energy remaining: %d\n", energy);
 
         // Demander à l'utilisateur de sélectionner les mouvements disponibles pour la phase suivante
         int num_available_moves = 0;
@@ -171,6 +190,15 @@ int main() {
 
         printf("\nExecuting move: %s\n", getMoveAsString(selected_move));
 
+        // Récupérer le coût du mouvement
+        int move_cost = _move_cost[selected_move];
+
+        // Appliquer l'effet du terrain ERG
+        if (erg_effect) {
+            move_cost *= 2;
+            erg_effect = 0; // Réinitialiser l'effet après l'avoir appliqué
+        }
+
         // Mettre à jour la localisation de MARC
         updateLocalisation(&marc_loc, selected_move);
 
@@ -195,12 +223,16 @@ int main() {
             switch (current_soil) {
                 case ERG:
                     printf("Warning: Erg soil, next movement will cost double.\n");
+                    erg_effect = 1;
                     break;
                 case REG:
                     printf("Warning: Reg soil, movement options are limited in the next phase.\n");
+                    // Limiter les mouvements disponibles (par exemple, seulement les rotations)
+                    // Vous pouvez implémenter cela si nécessaire
                     break;
                 case PENTE:
                     printf("Notice: Slope terrain, movement costs are increased.\n");
+                    move_cost += 5; // Augmenter le coût du mouvement
                     break;
                 case CREVASSE:
                     printf("Danger: MARC has fallen into a crevasse! Mission failed.\n");
@@ -214,25 +246,38 @@ int main() {
                     break;
             }
 
-            // Affichage du coût de la cellule actuelle
-            int case_cost = map.costs[marc_loc.pos.y][marc_loc.pos.x];
-            printf("Current cell cost: %d\n", case_cost);
-            total_cost += case_cost;
+            // Affichage du coût du mouvement
+            printf("Movement cost: %d\n", move_cost);
+
+            // Décrémenter l'énergie
+            energy -= move_cost;
+
+            // Vérifier si l'énergie est épuisée
+            if (energy <= 0) {
+                printf("MARC has run out of energy! Mission failed.\n");
+                mission_completed = 1;
+            } else {
+                // Afficher l'énergie restante
+                printf("Energy remaining: %d\n", energy);
+            }
 
             // Mise à jour du coût de départ pour la prochaine phase
             start_cost = map.costs[marc_loc.pos.y][marc_loc.pos.x];
 
             if (mission_completed) {
-                printf("Total cost of the mission: %d\n", total_cost);
+                printf("Total energy used: %d\n", MAX_ENERGY - energy);
             }
         } else {
             printf("MARC is out of bounds.\n");
             mission_completed = 1;
-            printf("Total cost before failure: %d\n", total_cost);
+            printf("Total energy used before failure: %d\n", MAX_ENERGY - energy);
         }
 
         // Libération de la mémoire allouée à l'arbre
         freeTree(root);
+
+        // Vérifier si la mission est terminée
+        if (mission_completed) break;
 
         // Incrémenter la phase
         current_phase++;
